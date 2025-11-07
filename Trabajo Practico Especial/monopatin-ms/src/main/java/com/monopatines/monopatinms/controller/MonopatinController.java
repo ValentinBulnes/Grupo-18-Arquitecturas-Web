@@ -1,0 +1,70 @@
+package com.monopatines.monopatinms.controller;
+
+import com.monopatines.monopatinms.DTO.MonopatinDTO;
+import com.monopatines.monopatinms.entity.EstadoMonopatin;
+import com.monopatines.monopatinms.entity.Monopatin;
+import com.monopatines.monopatinms.service.MonopatinService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/monopatines")
+@RequiredArgsConstructor
+public class MonopatinController {
+    private final MonopatinService monopatinService;
+
+
+
+    // endpoint para recuperar todos los monopatines
+    @GetMapping("/")
+   public ResponseEntity<List<MonopatinDTO>> getAll(){
+        List<MonopatinDTO> list = monopatinService.findAll();
+        if(list.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
+    }
+
+    // endpoint para recuperar n monopatin por id
+    @GetMapping("/{id}")
+    public ResponseEntity<MonopatinDTO> getMonopatinById(@PathVariable("id") String id){
+        MonopatinDTO m = monopatinService.obtenerMonopatin(id);
+        if (m == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(m);
+    }
+    // endpoint para dar alta a un monopatin
+    @PostMapping("")
+    public ResponseEntity<Monopatin> save(@RequestBody Monopatin monopatin){
+        Monopatin m= monopatinService.saveMonopatin(monopatin);
+        return ResponseEntity.ok(m);
+    }
+
+    // Endpoint para buscar monopatines en una parada
+    @GetMapping("/parada/{paradaId}")
+    public ResponseEntity<List<MonopatinDTO>> getMonopatinesEnParada(@PathVariable("paradaId") long paradaId) {
+        List<MonopatinDTO> monopatines = monopatinService.findByParada(paradaId);
+        if (monopatines.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(monopatines);
+    }
+
+    //  Endpoint para buscar por estado
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<MonopatinDTO>> getMonopatinesByEstado(@PathVariable("estado") EstadoMonopatin estado) {
+        List<MonopatinDTO> monopatines = monopatinService.findByEstado(estado);
+        if (monopatines.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(monopatines);
+    }
+
+
+
+
+}

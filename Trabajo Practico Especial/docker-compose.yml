@@ -60,7 +60,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: user
     ports:
-      - "3312:3306" # Asignamos nuevo puerto local 3312
+      - "3312:3306"
     networks:
       - app-network
     healthcheck:
@@ -78,7 +78,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: user
     ports:
-      - "3313:3306" # Asignamos nuevo puerto local 3313
+      - "3313:3306"
     networks:
       - app-network
     healthcheck:
@@ -96,7 +96,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: user
     ports:
-      - "3314:3306" # Asignamos nuevo puerto local 3314
+      - "3314:3306"
     networks:
       - app-network
     healthcheck:

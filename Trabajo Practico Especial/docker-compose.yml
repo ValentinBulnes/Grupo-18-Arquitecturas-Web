@@ -20,7 +20,7 @@ services:
       retries: 5
 
   usuario-db:
-    image: mysql:8.0
+    image: mysql:8.3.0
     container_name: usuario-db
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -29,9 +29,19 @@ services:
       MYSQL_PASSWORD: user
     ports:
       - "3310:3306"
+    networks:
+      - app-network
+    volumes:
+      - usuario_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
   cuenta-db:
-    image: mysql:8.0
+    image: mysql:8.3.0
     container_name: cuenta-db
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -40,7 +50,17 @@ services:
       MYSQL_PASSWORD: user
     ports:
       - "3311:3306"
-      
+    networks:
+      - app-network
+    volumes:
+      - cuenta_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
   monopatin-db:
     image: mongo:6.0
     container_name: monopatin-db
@@ -113,3 +133,5 @@ networks:
 volumes:
   mysql_data:
   mongo_data:
+  usuario_data:
+  cuenta_data:

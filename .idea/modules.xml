@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Trabajo Practico Especial/cuenta-ms/cuenta-ms.iml" filepath="$PROJECT_DIR$/Trabajo Practico Especial/cuenta-ms/cuenta-ms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Trabajo Practico Especial/usuario-ms/usuario-ms.iml" filepath="$PROJECT_DIR$/Trabajo Practico Especial/usuario-ms/usuario-ms.iml" />
+    </modules>
+  </component>
+</project>

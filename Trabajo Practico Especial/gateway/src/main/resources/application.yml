@@ -1,0 +1,61 @@
+server:
+  port: 8080 # Puerto del Gateway
+
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    # Deshabilita el chequeo de versión de Spring Boot vs. Spring Cloud
+    compatibility-verifier:
+      enabled: false
+
+    gateway:
+      routes:
+        # --- Ruta para Usuario MS ---
+        - id: usuario-ms
+          uri: http://localhost:8001
+          predicates:
+            - Path=/usuarios/**
+
+        # --- Ruta para Monopatin MS ---
+        - id: monopatin-ms
+          uri: http://localhost:8006
+          predicates:
+            - Path=/monopatines/**
+
+        # --- Ruta para Parada MS ---
+        - id: parada-ms
+          uri: http://localhost:8005
+          predicates:
+            - Path=/paradas/**
+
+        # --- Ruta para Cuenta MS ---
+        - id: cuenta-ms
+          uri: http://localhost:8002
+          predicates:
+            - Path=/cuentas/**
+
+        # --- Ruta para Tarifa MS ---
+        - id: tarifa-ms
+          uri: http://localhost:8004
+          predicates:
+            - Path=/tarifas/**
+
+        # --- Ruta para Viaje MS ---
+        - id: viaje-ms
+          uri: http://localhost:8007
+          predicates:
+            - Path=/viajes/**
+
+        # --- Ruta para Administracion MS ---
+        - id: administracion-ms
+          uri: http://localhost:8008
+          predicates:
+            - Path=/administracion/**
+
+        # --- Ruta para Facturacion MS ---
+        - id: factura-ms
+          uri: http://localhost:8003
+          predicates:
+            - Path=/factura/**

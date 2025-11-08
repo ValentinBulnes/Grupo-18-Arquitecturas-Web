@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Facturas")
+@RequestMapping("/facturas")
 public class FacturaController {
 
     private final FacturaService facturaService;

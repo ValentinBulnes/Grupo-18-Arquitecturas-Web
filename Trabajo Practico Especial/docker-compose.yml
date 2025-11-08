@@ -11,12 +11,51 @@ services:
       - "3309:3306"
     networks:
       - app-network
+    volumes:
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "user", "-puser"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser"]
       interval: 10s
       timeout: 5s
       retries: 5
-  
+
+  usuario-db:
+    image: mysql:8.0
+    container_name: usuario-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: usuario
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3310:3306"
+
+  cuenta-db:
+    image: mysql:8.0
+    container_name: cuenta-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cuenta
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3311:3306"
+      
+  monopatin-db:
+    image: mongo:6.0
+    container_name: monopatin-db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    volumes:
+      - mongo_data:/data/db
+
 networks:
   app-network:
     driver: bridge
+
+
+volumes:
+  mysql_data:
+  mongo_data:

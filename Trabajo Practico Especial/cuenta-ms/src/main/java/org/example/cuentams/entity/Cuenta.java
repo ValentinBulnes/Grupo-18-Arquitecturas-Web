@@ -1,0 +1,38 @@
+package org.example.cuentams.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Data // Genera getters y setters, toString, equals, hashcode
+@NoArgsConstructor // Genera un constructor vacio
+@AllArgsConstructor // Genera un constructor con todos los atributos
+@Entity
+public class Cuenta {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "numero_identificatorio")
+    private Long id;
+
+    @Column
+    private String tipo; // BÁSICA o PREMIUM
+
+    @Column
+    private Double saldo;
+
+    @Column
+    private String mercadoPagoId;
+
+    @Column
+    private LocalDate fechaAlta;
+
+    @Column
+    private boolean activa = true;
+
+    @ElementCollection // Crea una tabla secundaria en la bd
+    private List<Long> usuarioIds;
+}

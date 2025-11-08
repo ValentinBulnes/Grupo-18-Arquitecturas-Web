@@ -33,7 +33,9 @@ public class Factura {
     private long  cuentaId;
 
     private long  usuarioId;
+
     public Factura() {}
+
     public Factura(LocalDate fechaEmision, Double montoTotal, String descripcion,
                    long  viajeId, long  cuentaId, long  usuarioId) {
         this.fechaEmision = fechaEmision;

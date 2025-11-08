@@ -1,10 +1,12 @@
 package org.example.facturams.service;
 
 import org.example.facturams.DTOs.CuentaDTO;
+import org.example.facturams.DTOs.TarifaDTO;
 import org.example.facturams.DTOs.UsuarioDTO;
 import org.example.facturams.DTOs.ViajeDTO;
 import org.example.facturams.entity.Factura;
 import org.example.facturams.feignClients.CuentaFeignClient;
+import org.example.facturams.feignClients.TarifaFeignClient;
 import org.example.facturams.feignClients.UsuarioFeignClient;
 import org.example.facturams.feignClients.ViajeFeignClient;
 import org.example.facturams.repository.FacturaRepository;
@@ -21,18 +23,24 @@ public class FacturaService {
   private final ViajeFeignClient viajeFeignClient;
   private final UsuarioFeignClient usuarioFeignClient;
   private final CuentaFeignClient cuentaFeignClient;
+  private final TarifaFeignClient tarifaFeignClient;
 
 
-    public FacturaService(FacturaRepository facturaRepository, ViajeFeignClient viajeFeignClient, UsuarioFeignClient usuarioFeignClient, CuentaFeignClient cuentaFeignClient) {
+
+    public FacturaService(FacturaRepository facturaRepository, ViajeFeignClient viajeFeignClient, UsuarioFeignClient usuarioFeignClient, CuentaFeignClient cuentaFeignClient, TarifaFeignClient tarifaFeignClient) {
         this.facturaRepository = facturaRepository;
         this.viajeFeignClient = viajeFeignClient;
         this.usuarioFeignClient = usuarioFeignClient;
         this.cuentaFeignClient = cuentaFeignClient;
+        this.tarifaFeignClient = tarifaFeignClient;
     }
+
+    //Crear una factura
     public Factura guardar(Factura factura){
         ViajeDTO viaje;
         UsuarioDTO usuario;
         CuentaDTO cuenta;
+        TarifaDTO tarifa = tarifaFeignClient.obtenerTarifaActual();
         try {
             viaje = viajeFeignClient.findById(factura.getViajeId());
         } catch (Exception e) {
@@ -50,41 +58,66 @@ public class FacturaService {
         }
 
 
-        double tarifaPorKm = 100.0;
-        double tarifaExtraPorPausa = 200.0;
-        double monto = viaje.getDistancia() * tarifaPorKm;
+        double monto = viaje.getDistancia() * tarifa.getPrecioPorKm();
+
+        //Agrega tarifa si tuvo una pausa de 15 minutos
         if (viaje.getTotalSegundosPausa() > 900) {
-            monto += tarifaExtraPorPausa;
+            monto += tarifa.getTarifaExtraPorPausa();
         }
+
 
         if ("premium".equalsIgnoreCase(cuenta.getTipoCuenta())) {
             if (viaje.getDistancia() <= 100) {
                 monto = 0.0;
             } else {
-                monto = (viaje.getDistancia() - 100) * tarifaPorKm * 0.5;
+                monto = (viaje.getDistancia() - 100) * tarifa.getPrecioPorKm() * 0.5;
             }
         }
-        if ("prepaga".equalsIgnoreCase(cuenta.getTipoCuenta())) {
 
+        if ("prepaga".equalsIgnoreCase(cuenta.getTipoCuenta())) {
             if (cuenta.getSaldo() < monto) {
                 throw new RuntimeException("Saldo insuficiente en la cuenta.");
-            }else {
+            } else {
                 cuentaFeignClient.descontarSaldo(cuenta.getId(), monto);
             }
-
         }
         factura.setMontoTotal(monto);
         factura.setFechaEmision(LocalDate.now());
         factura.setDescripcion("Factura generada por viaje de " + viaje.getDistancia() + " km");
         return facturaRepository.save(factura);
     }
+
+    //Obtener factura por id
     public Factura buscarPorId(Long id) {
         return facturaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Factura no encontrada con ID: " + id));
     }
-
+    // Obtiene todas las facturas
     public List<Factura> listarTodas() {
 
         return facturaRepository.findAll();
+    }
+
+    // Modificar factura
+    public Factura actualizarFactura(Long id, Factura nuevaFactura) {
+        Factura facturaExistente = facturaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Factura no encontrada con ID: " + id));
+
+        facturaExistente.setFechaEmision(nuevaFactura.getFechaEmision());
+        facturaExistente.setMontoTotal(nuevaFactura.getMontoTotal());
+        facturaExistente.setDescripcion(nuevaFactura.getDescripcion());
+        facturaExistente.setViajeId(nuevaFactura.getViajeId());
+        facturaExistente.setCuentaId(nuevaFactura.getCuentaId());
+        facturaExistente.setUsuarioId(nuevaFactura.getUsuarioId());
+
+        return facturaRepository.save(facturaExistente);
+    }
+
+     // Eliminar factura
+    public void eliminarFactura(Long id) {
+        if (!facturaRepository.existsById(id)) {
+            throw new RuntimeException("Factura no encontrada con ID: " + id);
+        }
+        facturaRepository.deleteById(id);
     }
 }

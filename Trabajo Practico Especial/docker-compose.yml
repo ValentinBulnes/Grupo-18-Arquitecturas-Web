@@ -51,6 +51,60 @@ services:
     volumes:
       - mongo_data:/data/db
 
+  viaje-db:
+    image: mysql:8.3.0
+    container_name: viaje-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: viaje
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3312:3306" # Asignamos nuevo puerto local 3312
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  tarifa-db:
+    image: mysql:8.3.0
+    container_name: tarifa-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tarifa_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3313:3306" # Asignamos nuevo puerto local 3313
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  factura-db:
+    image: mysql:8.3.0
+    container_name: factura-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: factura_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3314:3306" # Asignamos nuevo puerto local 3314
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   app-network:
     driver: bridge

@@ -17,7 +17,7 @@ public class ViajeController {
     private ViajeService viajeService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Viaje> getById(@PathVariable Long id) {
+    public ResponseEntity<Viaje> getById(@PathVariable String id) {
         Viaje viaje = viajeService.findById(id);
         if (viaje == null) {
             return ResponseEntity.notFound().build();
@@ -27,8 +27,8 @@ public class ViajeController {
 
     @GetMapping
     public ResponseEntity<List<Viaje>> getViajes(
-            @RequestParam(required = false) Long userId,
-            @RequestParam(required = false) Long monopatinId) {
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) String monopatinId) {
 
         List<Viaje> viajes;
 
@@ -50,7 +50,7 @@ public class ViajeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Viaje> update(@PathVariable Long id, @RequestBody Viaje viaje) {
+    public ResponseEntity<Viaje> update(@PathVariable String id, @RequestBody Viaje viaje) {
         Viaje existing = viajeService.findById(id);
         if (existing == null) {
             return ResponseEntity.notFound().build();

@@ -13,7 +13,7 @@ public class ViajeService {
     @Autowired
     private ViajeRepository viajeRepository;
 
-    public Viaje findById(Long id) {
+    public Viaje findById(String id) {
         return viajeRepository.findById(id).orElse(null);
     }
 
@@ -21,11 +21,11 @@ public class ViajeService {
         return viajeRepository.findAll();
     }
 
-    public List<Viaje> getAllbyUserId(Long userId) {
+    public List<Viaje> getAllbyUserId(String userId) {
         return viajeRepository.findAllByUsuarioId(userId);
     }
 
-    public List<Viaje> getAllByUserIdAndMonopatinId(Long userId, Long monopatinId) {
+    public List<Viaje> getAllByUserIdAndMonopatinId(String userId, String monopatinId) {
         return viajeRepository.findAllByUsuarioIdAndMonopatinId(userId, monopatinId);
     }
 

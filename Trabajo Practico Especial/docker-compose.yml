@@ -72,22 +72,14 @@ services:
       - mongo_data:/data/db
 
   viaje-db:
-    image: mysql:8.3.0
+    image: mongo:6.0
     container_name: viaje-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: viaje
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user
     ports:
-      - "3312:3306"
+      - "27017:27017"
     networks:
       - app-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    volumes:
+      - mongo_data:/data/db
 
   tarifa-db:
     image: mysql:8.3.0

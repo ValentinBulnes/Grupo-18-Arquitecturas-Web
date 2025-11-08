@@ -4,10 +4,14 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/TP2/pom.xml" />
-        <option value="$PROJECT_DIR$/TP3/pom.xml" />
         <option value="$PROJECT_DIR$/Trabajo Practico Especial/parada-ms/pom.xml" />
         <option value="$PROJECT_DIR$/Trabajo Practico Especial/monopatin-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/Trabajo Practico Especial/cuenta-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/Trabajo Practico Especial/factura-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/Trabajo Practico Especial/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/Trabajo Practico Especial/tarifa-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/Trabajo Practico Especial/usuario-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/Trabajo Practico Especial/viaje-ms/pom.xml" />
       </list>
     </option>
   </component>

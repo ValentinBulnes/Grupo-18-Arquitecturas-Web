@@ -7,8 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="TP3" />
-        <module name="Ejercicio-Integrador-2-Arquitecturas-Web" />
+        <module name="gateway" />
         <module name="parada-ms" />
       </profile>
       <profile name="Annotation profile for monopatin-ms" enabled="true">
@@ -16,17 +15,40 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
         <module name="monopatin-ms" />
       </profile>
+      <profile name="Annotation profile for viaje-ms" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="viaje-ms" />
+        <module name="factura-ms" />
+        <module name="cuenta-ms" />
+        <module name="usuario-ms" />
+        <module name="tarifa-ms" />
+      </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Ejercicio-Integrador-2-Arquitecturas-Web" target="24" />
+      <module name="TP3" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="TP3" options="-parameters" />
+      <module name="cuenta-ms" options="-parameters" />
+      <module name="factura-ms" options="-parameters" />
+      <module name="gateway" options="-parameters" />
       <module name="monopatin-ms" options="-parameters" />
       <module name="parada-ms" options="-parameters" />
+      <module name="tarifa-ms" options="-parameters" />
+      <module name="usuario-ms" options="-parameters" />
+      <module name="viaje-ms" options="-parameters" />
     </option>
   </component>
 </project>

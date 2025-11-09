@@ -65,7 +65,7 @@ services:
     image: mongo:6.0
     container_name: monopatin-db
     ports:
-      - "27017:27017"
+      - "27018:27017"
     networks:
       - app-network
     volumes:
@@ -79,7 +79,7 @@ services:
     networks:
       - app-network
     volumes:
-      - mongo_data:/data/db
+      - viaje_data:/data/db
 
   tarifa-db:
     image: mysql:8.3.0
@@ -127,3 +127,4 @@ volumes:
   mongo_data:
   usuario_data:
   cuenta_data:
+  viaje_data:

@@ -6,7 +6,7 @@ spring:
     name: gateway
 
   cloud:
-    # Deshabilita el chequeo de versión de Spring Boot vs. Spring Cloud
+    # Deshabilita el chequeo de versiï¿½n de Spring Boot vs. Spring Cloud
     compatibility-verifier:
       enabled: false
 
@@ -48,14 +48,8 @@ spring:
           predicates:
             - Path=/viajes/**
 
-        # --- Ruta para Administracion MS ---
-        - id: administracion-ms
-          uri: http://localhost:8008
-          predicates:
-            - Path=/administracion/**
-
         # --- Ruta para Facturacion MS ---
         - id: factura-ms
           uri: http://localhost:8003
           predicates:
-            - Path=/factura/**
+            - Path=/facturas/**

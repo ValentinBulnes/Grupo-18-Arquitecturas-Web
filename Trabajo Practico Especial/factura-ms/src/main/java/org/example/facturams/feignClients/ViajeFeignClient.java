@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ViajeFeignClient {
 
     @GetMapping("/viajes/{id}")
-    ViajeDTO findById(@PathVariable Long id);
+    ViajeDTO findById(@PathVariable String id);
 }

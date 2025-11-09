@@ -47,4 +47,14 @@ public class CuentaController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}/descontar")
+    public ResponseEntity<?> descontarSaldo(@PathVariable Long id, @RequestParam("monto") Double monto) {
+        try {
+            Cuenta cuentaActualizada = cuentaService.descontarSaldo(id, monto);
+            return ResponseEntity.ok(cuentaActualizada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

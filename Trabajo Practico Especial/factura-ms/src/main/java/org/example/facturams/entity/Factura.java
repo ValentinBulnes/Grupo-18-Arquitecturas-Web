@@ -28,7 +28,7 @@ public class Factura {
 
     private String descripcion;
 
-    private long  viajeId;
+    private String  viajeId;
 
     private long  cuentaId;
 
@@ -37,7 +37,7 @@ public class Factura {
     public Factura() {}
 
     public Factura(LocalDate fechaEmision, Double montoTotal, String descripcion,
-                   long  viajeId, long  cuentaId, long  usuarioId) {
+                   String  viajeId, long  cuentaId, long  usuarioId) {
         this.fechaEmision = fechaEmision;
         this.montoTotal = montoTotal;
         this.descripcion = descripcion;
@@ -46,7 +46,7 @@ public class Factura {
         this.usuarioId = usuarioId;
     }
 
-    public long  getViajeId() {
+    public String  getViajeId() {
         return viajeId;
     }
     public long  getUsuarioId() {

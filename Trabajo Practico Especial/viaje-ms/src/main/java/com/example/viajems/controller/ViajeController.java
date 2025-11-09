@@ -27,7 +27,7 @@ public class ViajeController {
 
     @GetMapping
     public ResponseEntity<List<Viaje>> getViajes(
-            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) Long userId,
             @RequestParam(required = false) String monopatinId) {
 
         List<Viaje> viajes;

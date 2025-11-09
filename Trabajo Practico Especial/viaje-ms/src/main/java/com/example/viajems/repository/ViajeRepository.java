@@ -9,6 +9,6 @@ import com.example.viajems.entity.Viaje;
 
 @Repository
 public interface ViajeRepository extends MongoRepository<Viaje, String> {
-    List<Viaje> findAllByUsuarioId(String usuarioId);
-    List<Viaje> findAllByUsuarioIdAndMonopatinId(String usuarioId, String monopatinId);
+    List<Viaje> findAllByUsuarioId(Long usuarioId);
+    List<Viaje> findAllByUsuarioIdAndMonopatinId(Long usuarioId, String monopatinId);
 }

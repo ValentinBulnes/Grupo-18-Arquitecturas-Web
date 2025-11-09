@@ -17,7 +17,7 @@ public class Viaje {
     private String id;
 
     private Long usuarioId;
-    private Long monopatinId;
+    private String monopatinId;
     private Long paradaOrigenId;
     private Long paradaDestinoId;
 

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Setter
 public class ViajeDTO {
 
-    private long id;
+    private String id;
     private LocalDate fecha;
     private long usuarioId;
     private Double distancia;

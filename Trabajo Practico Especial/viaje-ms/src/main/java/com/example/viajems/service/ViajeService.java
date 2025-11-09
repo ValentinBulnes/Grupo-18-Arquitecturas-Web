@@ -21,11 +21,11 @@ public class ViajeService {
         return viajeRepository.findAll();
     }
 
-    public List<Viaje> getAllbyUserId(String userId) {
+    public List<Viaje> getAllbyUserId(Long userId) {
         return viajeRepository.findAllByUsuarioId(userId);
     }
 
-    public List<Viaje> getAllByUserIdAndMonopatinId(String userId, String monopatinId) {
+    public List<Viaje> getAllByUserIdAndMonopatinId(Long userId, String monopatinId) {
         return viajeRepository.findAllByUsuarioIdAndMonopatinId(userId, monopatinId);
     }
 

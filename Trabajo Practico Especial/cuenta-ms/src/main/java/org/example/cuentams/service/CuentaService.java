@@ -43,4 +43,16 @@ public class CuentaService {
     public UsuarioDTO obtenerUsuario(Long id) {
         return usuarioFeignClient.obtenerUsuario(id);
     }
+
+    public Cuenta descontarSaldo(Long id, Double monto) {
+        Cuenta cuenta = cuentaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada con ID: " + id));
+
+        if (cuenta.getSaldo() < monto) {
+            throw new RuntimeException("Saldo insuficiente en la cuenta ID: " + id);
+        }
+
+        cuenta.setSaldo(cuenta.getSaldo() - monto);
+        return cuentaRepository.save(cuenta);
+    }
 }

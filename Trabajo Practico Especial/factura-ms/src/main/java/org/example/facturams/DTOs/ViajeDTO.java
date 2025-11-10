@@ -12,6 +12,6 @@ public class ViajeDTO {
     private String id;
     private LocalDate fecha;
     private long usuarioId;
-    private Double distancia;
+    private Double kilometrosRecorridos;
     private Long totalSegundosPausa;
 }

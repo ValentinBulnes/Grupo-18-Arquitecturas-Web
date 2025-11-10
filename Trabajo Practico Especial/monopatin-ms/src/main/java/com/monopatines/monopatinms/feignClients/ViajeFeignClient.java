@@ -1,7 +1,6 @@
-package com.example.administracionms.feign;
+package com.monopatines.monopatinms.feignClients;
 
-import com.example.administracionms.dto.MonopatinDTO;
-import com.example.administracionms.dto.ViajeDTO;
+import com.monopatines.monopatinms.DTO.ViajeDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

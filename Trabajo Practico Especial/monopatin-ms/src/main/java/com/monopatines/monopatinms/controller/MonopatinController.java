@@ -1,6 +1,7 @@
 package com.monopatines.monopatinms.controller;
 
 import com.monopatines.monopatinms.DTO.MonopatinDTO;
+import com.monopatines.monopatinms.DTO.ReporteMonopatinDTO;
 import com.monopatines.monopatinms.entity.EstadoMonopatin;
 import com.monopatines.monopatinms.entity.Monopatin;
 import com.monopatines.monopatinms.service.MonopatinService;
@@ -62,6 +63,19 @@ public class MonopatinController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(monopatines);
+    }
+
+    //
+    @GetMapping("/monopatines/uso")
+    public ResponseEntity<List<ReporteMonopatinDTO>> getReporteUso(
+            @RequestParam(defaultValue = "false") boolean incluirPausas) {
+
+        List<ReporteMonopatinDTO> reporte = monopatinService.generarReporteUso(incluirPausas);
+
+        if (reporte.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reporte);
     }
 
 

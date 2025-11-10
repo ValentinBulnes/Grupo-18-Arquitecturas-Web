@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.viajems.DTO.MonopatinDTO;
 
-@FeignClient(name = "monopatines-ms", url = "http://localhost:8006")
+@FeignClient(name = "monopatin-ms", url = "http://localhost:8006")
 public interface MonopatinFeignClient {
 
     @GetMapping("/monopatines/{id}")

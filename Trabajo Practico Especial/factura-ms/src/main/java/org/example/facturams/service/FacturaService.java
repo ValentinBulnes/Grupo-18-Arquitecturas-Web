@@ -58,7 +58,7 @@ public class FacturaService {
         }
 
 
-        double monto = viaje.getDistancia() * tarifa.getPrecioPorKm();
+        double monto = viaje.getKilometrosRecorridos() * tarifa.getPrecioPorKm();
 
         //Agrega tarifa si tuvo una pausa de 15 minutos
         if (viaje.getTotalSegundosPausa() > 900) {
@@ -67,10 +67,10 @@ public class FacturaService {
 
 
         if ("premium".equalsIgnoreCase(cuenta.getTipoCuenta())) {
-            if (viaje.getDistancia() <= 100) {
+            if (viaje.getKilometrosRecorridos() <= 100) {
                 monto = 0.0;
             } else {
-                monto = (viaje.getDistancia() - 100) * tarifa.getPrecioPorKm() * 0.5;
+                monto = (viaje.getKilometrosRecorridos() - 100) * tarifa.getPrecioPorKm() * 0.5;
             }
         }
 
@@ -83,7 +83,7 @@ public class FacturaService {
         }
         factura.setMontoTotal(monto);
         factura.setFechaEmision(LocalDate.now());
-        factura.setDescripcion("Factura generada por viaje de " + viaje.getDistancia() + " km");
+        factura.setDescripcion("Factura generada por viaje de " + viaje.getKilometrosRecorridos() + " km");
         return facturaRepository.save(factura);
     }
 

@@ -72,6 +72,7 @@ public class MonopatinService {
     private MonopatinDTO convertirADTO(Monopatin monopatin) {
         MonopatinDTO dto = new MonopatinDTO();
 
+        dto.setId(monopatin.getId());
         dto.setEstado(monopatin.getEstado());
         dto.setKmTotales(monopatin.getKmTotales());
         dto.setTiempoUsoTotal(monopatin.getTiempoUsoTotal());

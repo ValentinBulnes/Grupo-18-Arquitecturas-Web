@@ -1,28 +1,23 @@
 package com.example.viajems.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Document(collection = "viajes")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Viaje {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private Long usuarioId;
-    
-    private Long monopatinId;
-
+    private String monopatinId;
     private Long paradaOrigenId;
     private Long paradaDestinoId;
 

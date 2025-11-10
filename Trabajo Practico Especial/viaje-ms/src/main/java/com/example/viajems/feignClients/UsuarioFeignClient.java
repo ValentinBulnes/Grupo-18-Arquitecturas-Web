@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.viajems.DTO.UsuarioDTO;
 
-// URI directa (sin Eureka)
 @FeignClient(name = "usuarios-ms", url = "http://localhost:8001")
 public interface UsuarioFeignClient {
 

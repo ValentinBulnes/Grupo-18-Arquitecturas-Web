@@ -22,7 +22,6 @@ public class FacturaService {
   private final FacturaRepository facturaRepository;
   private final ViajeFeignClient viajeFeignClient;
   private final UsuarioFeignClient usuarioFeignClient;
-  private final CuentaFeignClient cuentaFeignClient;
   private final TarifaFeignClient tarifaFeignClient;
 
 
@@ -31,7 +30,6 @@ public class FacturaService {
         this.facturaRepository = facturaRepository;
         this.viajeFeignClient = viajeFeignClient;
         this.usuarioFeignClient = usuarioFeignClient;
-        this.cuentaFeignClient = cuentaFeignClient;
         this.tarifaFeignClient = tarifaFeignClient;
     }
 
@@ -39,7 +37,6 @@ public class FacturaService {
     public Factura guardar(Factura factura){
         ViajeDTO viaje;
         UsuarioDTO usuario;
-        CuentaDTO cuenta;
         TarifaDTO tarifa = tarifaFeignClient.obtenerTarifaActual();
         try {
             viaje = viajeFeignClient.findById(factura.getViajeId());
@@ -51,12 +48,6 @@ public class FacturaService {
         } catch (Exception e) {
             throw new RuntimeException("No se pudo obtener el usuario: " + e.getMessage());
         }
-        try {
-            cuenta = cuentaFeignClient.findById(factura.getCuentaId());
-        } catch (Exception e) {
-            throw new RuntimeException("No se pudo obtener la cuenta: " + e.getMessage());
-        }
-
 
         double monto = viaje.getKilometrosRecorridos() * tarifa.getPrecioPorKm();
 
@@ -65,22 +56,6 @@ public class FacturaService {
             monto += tarifa.getTarifaExtraPorPausa();
         }
 
-
-        if ("premium".equalsIgnoreCase(cuenta.getTipoCuenta())) {
-            if (viaje.getKilometrosRecorridos() <= 100) {
-                monto = 0.0;
-            } else {
-                monto = (viaje.getKilometrosRecorridos() - 100) * tarifa.getPrecioPorKm() * 0.5;
-            }
-        }
-
-        if ("prepaga".equalsIgnoreCase(cuenta.getTipoCuenta())) {
-            if (cuenta.getSaldo() < monto) {
-                throw new RuntimeException("Saldo insuficiente en la cuenta.");
-            } else {
-                cuentaFeignClient.descontarSaldo(cuenta.getId(), monto);
-            }
-        }
         factura.setMontoTotal(monto);
         factura.setFechaEmision(LocalDate.now());
         factura.setDescripcion("Factura generada por viaje de " + viaje.getKilometrosRecorridos() + " km");
@@ -119,5 +94,9 @@ public class FacturaService {
             throw new RuntimeException("Factura no encontrada con ID: " + id);
         }
         facturaRepository.deleteById(id);
+    }
+
+    public Double calcularTotalFacturado(int anio, int mesInicio, int mesFin) {
+        return facturaRepository.totalFacturadoEnRango(anio, mesInicio, mesFin);
     }
 }

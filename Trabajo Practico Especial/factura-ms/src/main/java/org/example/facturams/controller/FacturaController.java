@@ -49,4 +49,11 @@ public class FacturaController {
         facturaService.eliminarFactura(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/total")
+    public Double obtenerTotalFacturado(@RequestParam int anio,
+                                        @RequestParam int mesInicio,
+                                        @RequestParam int mesFin) {
+        return facturaService.calcularTotalFacturado(anio, mesInicio, mesFin);
+    }
 }

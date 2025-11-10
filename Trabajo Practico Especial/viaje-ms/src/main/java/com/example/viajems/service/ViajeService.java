@@ -1,7 +1,11 @@
 package com.example.viajems.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.example.viajems.DTO.ViajesPorMonopatinDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,4 +42,13 @@ public class ViajeService {
     public Viaje update(Viaje viaje) {
         return viajeRepository.save(viaje);
     }
+
+    public List<ViajesPorMonopatinDTO> getMonopatinesConMasDeXViajesEnAnio(int anio, int cantidadMinima) {
+        LocalDateTime startOfYear = LocalDateTime.of(anio, 1, 1, 0, 0);
+        LocalDateTime endOfYear = LocalDateTime.of(anio + 1, 1, 1, 0, 0);
+
+        return viajeRepository.findMonopatinesConMasDeXViajesEnAnio(startOfYear, endOfYear, cantidadMinima);
+    }
+
+
 }

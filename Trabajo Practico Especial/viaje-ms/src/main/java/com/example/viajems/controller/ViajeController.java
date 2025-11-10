@@ -1,7 +1,9 @@
 package com.example.viajems.controller;
 
 import java.util.List;
+import java.util.Map;
 
+import com.example.viajems.DTO.ViajesPorMonopatinDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +43,14 @@ public class ViajeController {
         }
 
         return ResponseEntity.ok(viajes);
+    }
+
+    @GetMapping("/monopatines/mas-viajes")
+    public ResponseEntity<List<ViajesPorMonopatinDTO>> getMonopatinesConMasViajes(@RequestParam int anio, @RequestParam int cantidadMinima) {
+
+        List<ViajesPorMonopatinDTO> resultado = viajeService.getMonopatinesConMasDeXViajesEnAnio(anio, cantidadMinima);
+
+        return ResponseEntity.ok(resultado);
     }
 
     @PostMapping

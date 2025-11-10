@@ -65,8 +65,8 @@ public class MonopatinController {
         return ResponseEntity.ok(monopatines);
     }
 
-    //
-    @GetMapping("/monopatines/uso")
+    // Endpoint para generar un reporte de uso de monopatines por kilómetros
+    @GetMapping("/uso")
     public ResponseEntity<List<ReporteMonopatinDTO>> getReporteUso(
             @RequestParam(defaultValue = "false") boolean incluirPausas) {
 

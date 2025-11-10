@@ -53,8 +53,3 @@ spring:
           uri: http://localhost:8003
           predicates:
             - Path=/facturas/**
-
-        - id: administracion-ms
-          uri: http://localhost:8008
-          predicates:
-            - Path=/reportes/**

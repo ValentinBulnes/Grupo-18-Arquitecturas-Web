@@ -31,10 +31,10 @@
         <module name="cuenta-ms" />
         <module name="usuario-ms" />
         <module name="tarifa-ms" />
-        <module name="administracion-ms" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="administracion-ms" target="21" />
       <module name="Ejercicio-Integrador-2-Arquitecturas-Web" target="24" />
       <module name="TP3" target="21" />
     </bytecodeTargetLevel>

@@ -19,17 +19,19 @@
         </processorPath>
         <module name="monopatin-ms" />
       </profile>
-      <profile name="Annotation profile for viaje-ms" enabled="true">
+      <profile name="Annotation profile for administracion-ms" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
         <module name="viaje-ms" />
         <module name="factura-ms" />
         <module name="cuenta-ms" />
         <module name="usuario-ms" />
+        <module name="administracion-ms" />
         <module name="tarifa-ms" />
       </profile>
     </annotationProcessing>
@@ -41,6 +43,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="TP3" options="-parameters" />
+      <module name="administracion-ms" options="-parameters" />
       <module name="cuenta-ms" options="-parameters" />
       <module name="factura-ms" options="-parameters" />
       <module name="gateway" options="-parameters" />

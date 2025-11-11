@@ -27,8 +27,8 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
         <module name="viaje-ms" />
-        <module name="factura-ms" />
         <module name="cuenta-ms" />
+        <module name="factura-ms" />
         <module name="usuario-ms" />
         <module name="tarifa-ms" />
       </profile>

@@ -46,6 +46,12 @@ public class MonopatinController {
         return ResponseEntity.ok(m);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Monopatin> actualizar(@PathVariable("id") String id, @RequestBody Monopatin monopatin){
+        Monopatin m = monopatinService.updateMonopatin(monopatin);
+        return ResponseEntity.ok(m);
+    }
+
     // Endpoint para buscar monopatines en una parada
     @GetMapping("/parada/{paradaId}")
     public ResponseEntity<List<MonopatinDTO>> getMonopatinesEnParada(@PathVariable("paradaId") long paradaId) {

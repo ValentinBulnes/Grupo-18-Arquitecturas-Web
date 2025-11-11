@@ -34,33 +34,41 @@ public class FacturaService {
     }
 
     //Crear una factura
-    public Factura guardar(Factura factura){
+    public Factura guardar(Factura factura) {
         ViajeDTO viaje;
         UsuarioDTO usuario;
         TarifaDTO tarifa = tarifaFeignClient.obtenerTarifaActual();
+
         try {
             viaje = viajeFeignClient.findById(factura.getViajeId());
         } catch (Exception e) {
             throw new RuntimeException("No se pudo obtener el viaje: " + e.getMessage());
         }
+
         try {
-           usuario = usuarioFeignClient.findById( factura.getUsuarioId());
+            usuario = usuarioFeignClient.findById(factura.getUsuarioId());
         } catch (Exception e) {
             throw new RuntimeException("No se pudo obtener el usuario: " + e.getMessage());
         }
 
-        double monto = viaje.getKilometrosRecorridos() * tarifa.getPrecioPorKm();
+        Double kmRecorridos = viaje.getKilometrosRecorridos();
+        if (kmRecorridos == null) {
+            throw new IllegalArgumentException("El viaje no tiene kilómetros recorridos");
+        }
 
-        //Agrega tarifa si tuvo una pausa de 15 minutos
-        if (viaje.getTotalSegundosPausa() > 900) {
+        double monto = kmRecorridos * tarifa.getPrecioPorKm();
+
+        if (viaje.getTotalSegundosPausa() != null && viaje.getTotalSegundosPausa() > 900) {
             monto += tarifa.getTarifaExtraPorPausa();
         }
 
         factura.setMontoTotal(monto);
         factura.setFechaEmision(LocalDate.now());
-        factura.setDescripcion("Factura generada por viaje de " + viaje.getKilometrosRecorridos() + " km");
+        factura.setDescripcion("Factura generada por viaje de " + kmRecorridos + " km");
+
         return facturaRepository.save(factura);
     }
+
 
     //Obtener factura por id
     public Factura buscarPorId(Long id) {
@@ -96,6 +104,7 @@ public class FacturaService {
         facturaRepository.deleteById(id);
     }
 
+    // punto D
     public Double calcularTotalFacturado(int anio, int mesInicio, int mesFin) {
         return facturaRepository.totalFacturadoEnRango(anio, mesInicio, mesFin);
     }

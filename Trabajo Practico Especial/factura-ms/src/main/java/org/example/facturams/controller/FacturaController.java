@@ -50,6 +50,7 @@ public class FacturaController {
         return ResponseEntity.noContent().build();
     }
 
+    // punto D
     @GetMapping("/total")
     public Double obtenerTotalFacturado(@RequestParam int anio,
                                         @RequestParam int mesInicio,

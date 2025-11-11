@@ -9,8 +9,10 @@ import com.monopatines.monopatinms.entity.Monopatin;
 import com.monopatines.monopatinms.feignClients.ViajeFeignClient;
 import com.monopatines.monopatinms.repository.MonopatinRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.monopatines.monopatinms.DTO.ReporteMonopatinDTO;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,7 @@ public class MonopatinService {
     // insertar monopatin
     public Monopatin saveMonopatin(Monopatin monopatin) {
         Monopatin m;
+        validarParada(monopatin.getParadaActualID());
         m=  monopatinRepository.save(monopatin);
         return m;
     }
@@ -59,6 +62,7 @@ public class MonopatinService {
     // update monopatin
     public Monopatin updateMonopatin(Monopatin monopatin) {
         Monopatin m;
+        validarParada(monopatin.getParadaActualID());
         m= monopatinRepository.save(monopatin);
         return m;
     }
@@ -131,4 +135,32 @@ public class MonopatinService {
         return dto;
     }
 
+    private void validarParada(Long paradaId) {
+        if (paradaId == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El ID de la parada no puede ser nulo."
+            );
+        }
+
+        try {
+            ParadaDTO parada = paradaFeignClient.findById(paradaId);
+            if (parada == null) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "La parada con ID " + paradaId + " no existe."
+                );
+            }
+        } catch (feign.FeignException.NotFound e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "La parada con ID " + paradaId + " no existe."
+            );
+        } catch (feign.FeignException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.SERVICE_UNAVAILABLE,
+                    "Error al comunicarse con el servicio de paradas."
+            );
+        }
+    }
 }

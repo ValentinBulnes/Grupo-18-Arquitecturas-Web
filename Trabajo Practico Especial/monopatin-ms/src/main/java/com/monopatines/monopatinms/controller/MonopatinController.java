@@ -20,7 +20,7 @@ public class MonopatinController {
 
 
     // endpoint para recuperar todos los monopatines
-    @GetMapping("/")
+    @GetMapping("")
    public ResponseEntity<List<MonopatinDTO>> getAll(){
         List<MonopatinDTO> list = monopatinService.findAll();
         if(list.isEmpty()){

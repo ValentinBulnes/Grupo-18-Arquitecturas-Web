@@ -56,4 +56,26 @@ public class CuentaController {
         }
     }
 
+    //inhabilitar una cuenta por id
+    @PutMapping("/{id}/inhabilitar")
+    public ResponseEntity<?> anularCuenta(@PathVariable Long id) {
+        try {
+            Cuenta cuentaActualizada = cuentaService.actualizarEstadoCuenta(id, false);
+            return ResponseEntity.ok(cuentaActualizada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    //habilitar una cuenta por id
+    @PutMapping("/{id}/habilitar")
+    public ResponseEntity<?> habilitarCuenta(@PathVariable Long id) {
+        try {
+            Cuenta cuentaActualizada = cuentaService.actualizarEstadoCuenta(id, true);
+            return ResponseEntity.ok(cuentaActualizada);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 }

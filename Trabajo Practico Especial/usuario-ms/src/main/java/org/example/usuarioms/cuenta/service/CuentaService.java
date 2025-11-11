@@ -48,4 +48,13 @@ public class CuentaService {
         cuenta.setSaldo(cuenta.getSaldo() - monto);
         return cuentaRepository.save(cuenta);
     }
+
+    //habilitar o deshabilitar cuenta
+    public Cuenta actualizarEstadoCuenta(Long id, boolean estado) {
+        Cuenta cuenta = cuentaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada con ID: " + id));
+
+        cuenta.setActiva(estado);
+        return cuentaRepository.save(cuenta);
+    }
 }

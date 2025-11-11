@@ -23,6 +23,7 @@ public class FacturaService {
   private final ViajeFeignClient viajeFeignClient;
   private final UsuarioFeignClient usuarioFeignClient;
   private final TarifaFeignClient tarifaFeignClient;
+  private final CuentaFeignClient cuentaFeignClient;
 
 
 
@@ -31,6 +32,7 @@ public class FacturaService {
         this.viajeFeignClient = viajeFeignClient;
         this.usuarioFeignClient = usuarioFeignClient;
         this.tarifaFeignClient = tarifaFeignClient;
+        this.cuentaFeignClient = cuentaFeignClient;
     }
 
     //Crear una factura
@@ -65,6 +67,12 @@ public class FacturaService {
         factura.setMontoTotal(monto);
         factura.setFechaEmision(LocalDate.now());
         factura.setDescripcion("Factura generada por viaje de " + kmRecorridos + " km");
+
+        try {
+            cuentaFeignClient.descontarSaldo(factura.getCuentaId(), monto);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al intentar descontar saldo de la cuenta ID: " + factura.getCuentaId() + ". Detalle: " + e.getMessage());
+        }
 
         return facturaRepository.save(factura);
     }

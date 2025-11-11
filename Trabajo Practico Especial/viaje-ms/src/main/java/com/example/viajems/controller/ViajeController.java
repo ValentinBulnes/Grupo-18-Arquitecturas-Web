@@ -48,7 +48,8 @@ public class ViajeController {
     }
 
     @GetMapping("/monopatines/mas-viajes")
-    public ResponseEntity<List<ViajesPorMonopatinDTO>> getMonopatinesConMasViajes(@RequestParam int anio, @RequestParam int cantidadMinima) {
+    public ResponseEntity<List<ViajesPorMonopatinDTO>> getMonopatinesConMasViajes(@RequestParam int anio,
+            @RequestParam int cantidadMinima) {
 
         List<ViajesPorMonopatinDTO> resultado = viajeService.getMonopatinesConMasDeXViajesEnAnio(anio, cantidadMinima);
 
@@ -75,23 +76,29 @@ public class ViajeController {
     @GetMapping("/uso-por-cuenta")
     public ResponseEntity<Map<String, Object>> getUsoPorCuenta(
             @RequestParam Long cuentaId,
+            @RequestParam Long usuarioId,
             @RequestParam String fechaDesde,
             @RequestParam String fechaHasta,
             @RequestParam(defaultValue = "false") boolean incluirUsuariosRelacionados) {
 
         LocalDate desde;
         LocalDate hasta;
+        
         try {
             desde = LocalDate.parse(fechaDesde);
             hasta = LocalDate.parse(fechaHasta);
         } catch (DateTimeParseException ex) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Formato de fecha inválido. Use YYYY-MM-DD"));
+            return ResponseEntity.badRequest().body(
+                    Map.of("error", "Formato de fecha inválido. Use YYYY-MM-DD"));
         }
 
         if (desde.isAfter(hasta)) {
-            return ResponseEntity.badRequest().body(Map.of("error", "fechaDesde no puede ser posterior a fechaHasta"));
+            return ResponseEntity.badRequest().body(
+                    Map.of("error", "fechaDesde no puede ser posterior a fechaHasta"));
         }
-        Map<String, Object> resumen = viajeService.getUsoPorCuenta(cuentaId, desde, hasta, incluirUsuariosRelacionados);
+
+        Map<String, Object> resumen = viajeService.getUsoPorCuenta(cuentaId, usuarioId, desde, hasta,
+                incluirUsuariosRelacionados);
 
         if (resumen == null) {
             return ResponseEntity.notFound().build();
@@ -99,4 +106,5 @@ public class ViajeController {
 
         return ResponseEntity.ok(resumen);
     }
+
 }

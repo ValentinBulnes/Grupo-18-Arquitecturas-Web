@@ -86,9 +86,8 @@ public class ViajeService {
         return viajeRepository.findMonopatinesConMasDeXViajesEnAnio(startOfYear, endOfYear, cantidadMinima);
     }
 
-    public Map<String, Object> getUsoPorCuenta(Long cuentaId, LocalDate desde, LocalDate hasta,
+    public Map<String, Object> getUsoPorCuenta(Long cuentaId, Long usuarioId, LocalDate desde, LocalDate hasta,
             boolean incluirUsuariosRelacionados) {
-
         CuentaDTO cuenta = cuentaClient.getCuenta(cuentaId);
         if (cuenta == null)
             return null;
@@ -98,9 +97,8 @@ public class ViajeService {
                 .map(UsuarioDTO::getId)
                 .toList();
 
-        // Si NO hay que incluir usuarios relacionados, podés tomar solo el primero
-        if (!incluirUsuariosRelacionados && !usuariosIds.isEmpty()) {
-            usuariosIds = List.of(usuariosIds.get(0)); // dueño principal
+        if (!incluirUsuariosRelacionados) {
+            usuariosIds = List.of(usuarioId); 
         }
 
         LocalDateTime inicio = desde.atStartOfDay();

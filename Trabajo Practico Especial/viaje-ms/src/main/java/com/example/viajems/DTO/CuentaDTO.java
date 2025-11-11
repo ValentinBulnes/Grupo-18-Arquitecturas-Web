@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioDTO {
+public class CuentaDTO {
     private Long id;
-    private String nombre;
-    private String apellido;
-    private String email;
-    private String telefono;
-    private Double latitud;
-    private Double longitud;
+    private String tipo;
+    private Double saldo;
+    private boolean activa;
+    private List<UsuarioDTO> usuarios;
 }

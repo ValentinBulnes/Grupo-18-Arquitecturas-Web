@@ -1,5 +1,7 @@
 package com.example.viajems.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -68,5 +70,33 @@ public class ViajeController {
         viaje.setId(id);
         Viaje updated = viajeService.update(viaje);
         return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/uso-por-cuenta")
+    public ResponseEntity<Map<String, Object>> getUsoPorCuenta(
+            @RequestParam Long cuentaId,
+            @RequestParam String fechaDesde,
+            @RequestParam String fechaHasta,
+            @RequestParam(defaultValue = "false") boolean incluirUsuariosRelacionados) {
+
+        LocalDate desde;
+        LocalDate hasta;
+        try {
+            desde = LocalDate.parse(fechaDesde);
+            hasta = LocalDate.parse(fechaHasta);
+        } catch (DateTimeParseException ex) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Formato de fecha inválido. Use YYYY-MM-DD"));
+        }
+
+        if (desde.isAfter(hasta)) {
+            return ResponseEntity.badRequest().body(Map.of("error", "fechaDesde no puede ser posterior a fechaHasta"));
+        }
+        Map<String, Object> resumen = viajeService.getUsoPorCuenta(cuentaId, desde, hasta, incluirUsuariosRelacionados);
+
+        if (resumen == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(resumen);
     }
 }

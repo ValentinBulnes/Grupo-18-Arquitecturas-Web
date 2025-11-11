@@ -13,28 +13,31 @@ import com.example.viajems.entity.Viaje;
 
 @Repository
 public interface ViajeRepository extends MongoRepository<Viaje, String> {
-    List<Viaje> findAllByUsuarioId(Long usuarioId);
-    List<Viaje> findAllByUsuarioIdAndMonopatinId(Long usuarioId, String monopatinId);
+        List<Viaje> findAllByUsuarioId(Long usuarioId);
 
-    @Aggregation(pipeline = {
-            // 1. Filtrar por año
-            "{ $match: { 'fechaInicio': { $gte: ?0, $lt: ?1 } } }",
+        List<Viaje> findAllByUsuarioIdAndMonopatinId(Long usuarioId, String monopatinId);
 
-            // 2. Agrupar por idMonopatin y contar
-            "{ $group: { _id: '$monopatinId', totalViajes: { $sum: 1 } } }",
+        List<Viaje> findAllByUsuarioIdInAndFechaInicioBetween(List<Long> usuariosIds, LocalDateTime fechaMin,
+                        LocalDateTime fechaMax);
 
-            // 3. Filtrar los que tienen más de X viajes
-            "{ $match: { totalViajes: { $gte: ?2 } } }",
+        @Aggregation(pipeline = {
+                        // 1. Filtrar por año
+                        "{ $match: { 'fechaInicio': { $gte: ?0, $lt: ?1 } } }",
 
-            // 4. Ordenar por cantidad de viajes (descendente)
-            "{ $sort: { totalViajes: -1 } }",
+                        // 2. Agrupar por idMonopatin y contar
+                        "{ $group: { _id: '$monopatinId', totalViajes: { $sum: 1 } } }",
 
-            // 5. Proyectar el resultado
-            "{ $project: { _id: 0, idMonopatin: '$_id', totalViajes: 1 } }"
-    })
-    List<ViajesPorMonopatinDTO> findMonopatinesConMasDeXViajesEnAnio(
-            LocalDateTime startOfYear,
-            LocalDateTime endOfYear,
-            int cantidadMinima
-    );
+                        // 3. Filtrar los que tienen más de X viajes
+                        "{ $match: { totalViajes: { $gte: ?2 } } }",
+
+                        // 4. Ordenar por cantidad de viajes (descendente)
+                        "{ $sort: { totalViajes: -1 } }",
+
+                        // 5. Proyectar el resultado
+                        "{ $project: { _id: 0, idMonopatin: '$_id', totalViajes: 1 } }"
+        })
+        List<ViajesPorMonopatinDTO> findMonopatinesConMasDeXViajesEnAnio(
+                        LocalDateTime startOfYear,
+                        LocalDateTime endOfYear,
+                        int cantidadMinima);
 }

@@ -1,8 +1,6 @@
 package com.monopatines.monopatinms.service;
 
-import com.monopatines.monopatinms.DTO.MonopatinDTO;
-import com.monopatines.monopatinms.DTO.ParadaDTO;
-import com.monopatines.monopatinms.DTO.ViajeDTO;
+import com.monopatines.monopatinms.DTO.*;
 import com.monopatines.monopatinms.feignClients.ParadaFeignClient;
 import com.monopatines.monopatinms.entity.EstadoMonopatin;
 import com.monopatines.monopatinms.entity.Monopatin;
@@ -11,10 +9,10 @@ import com.monopatines.monopatinms.repository.MonopatinRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.monopatines.monopatinms.DTO.ReporteMonopatinDTO;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -117,6 +115,53 @@ public class MonopatinService {
         }
 
         return reporte;
+    }
+    // Encontrar monopatines cercanos a una ubicación
+    public List<MonopatinConDistanciaDTO> encontrarMonopatinesCercanos(
+            Double latitud, Double longitud, Double radioKm) {
+
+        // Calcular bounding box aproximado basado en el radio
+        // 1 grado de latitud ≈ 111 km
+        // 1 grado de longitud ≈ 111 km * cos(latitud)
+        Double deltaLat = radioKm / 111.0;
+        Double deltaLon = radioKm / (111.0 * Math.cos(Math.toRadians(latitud)));
+
+        Double minLat = latitud - deltaLat;
+        Double maxLat = latitud + deltaLat;
+        Double minLon = longitud - deltaLon;
+        Double maxLon = longitud + deltaLon;
+
+        // Obtener monopatines disponibles en el área usando la query
+        List<Monopatin> monopatines = monopatinRepository.findMonopatinesDisponiblesEnArea(
+                EstadoMonopatin.DISPONIBLE, minLat, maxLat, minLon, maxLon);
+
+        // Calcular distancia exacta y filtrar por radio (el bounding box es aproximado)
+        List<MonopatinConDistanciaDTO> resultado = new ArrayList<>();
+
+        for (Monopatin monopatin : monopatines) {
+            if (monopatin.getLatitud() != null && monopatin.getLongitud() != null
+                    && !monopatin.isRequiereMantenimiento()) {
+                Double distancia = monopatin.calcularDistanciaA(latitud, longitud);
+
+                if (distancia != null && distancia <= radioKm) {
+                    MonopatinConDistanciaDTO dto = new MonopatinConDistanciaDTO(
+                            monopatin.getId(),
+                            monopatin.getEstado().toString(),
+                            monopatin.getLatitud(),
+                            monopatin.getLongitud(),
+                            distancia,
+                            monopatin.getParadaActualID(),
+                            monopatin.isRequiereMantenimiento()
+                    );
+                    resultado.add(dto);
+                }
+            }
+        }
+
+        // Ordenar por distancia (más cercano primero)
+        resultado.sort(Comparator.comparing(MonopatinConDistanciaDTO::getDistanciaKm));
+
+        return resultado;
     }
 
     //metodo auxiliar para convertir a dto

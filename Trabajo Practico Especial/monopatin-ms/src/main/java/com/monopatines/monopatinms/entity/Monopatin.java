@@ -60,5 +60,31 @@ public class Monopatin {
         return this.latitud.equals(latitud) && this.longitud.equals(longitud);
     }
 
+    // Calcular distancia a un punto (en km) usando fórmula de Haversine
+    public Double calcularDistanciaA(Double latDestino, Double lonDestino) {
+        if (this.latitud == null || this.longitud == null) {
+            return null;
+        }
+
+        final int RADIO_TIERRA_KM = 6371;
+
+        double latDistancia = Math.toRadians(latDestino - this.latitud);
+        double lonDistancia = Math.toRadians(lonDestino - this.longitud);
+
+        double a = Math.sin(latDistancia / 2) * Math.sin(latDistancia / 2)
+                + Math.cos(Math.toRadians(this.latitud)) * Math.cos(Math.toRadians(latDestino))
+                * Math.sin(lonDistancia / 2) * Math.sin(lonDistancia / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return RADIO_TIERRA_KM * c;
+    }
+
+    // Verificar si está cerca de una ubicación (dentro de un radio en km)
+    public boolean estaCercaDe(Double latDestino, Double lonDestino, Double radioKm) {
+        Double distancia = calcularDistanciaA(latDestino, lonDestino);
+        return distancia != null && distancia <= radioKm;
+    }
+
 
 }

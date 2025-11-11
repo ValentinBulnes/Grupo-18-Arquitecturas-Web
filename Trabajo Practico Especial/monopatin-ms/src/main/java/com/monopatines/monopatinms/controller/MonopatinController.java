@@ -1,5 +1,6 @@
 package com.monopatines.monopatinms.controller;
 
+import com.monopatines.monopatinms.DTO.MonopatinConDistanciaDTO;
 import com.monopatines.monopatinms.DTO.MonopatinDTO;
 import com.monopatines.monopatinms.DTO.ReporteMonopatinDTO;
 import com.monopatines.monopatinms.entity.EstadoMonopatin;
@@ -76,6 +77,17 @@ public class MonopatinController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(reporte);
+    }
+
+    // Encontrar monopatines cercanos usando query params (alternativa más simple)
+    @GetMapping("/cercanos")
+    public ResponseEntity<List<MonopatinConDistanciaDTO>> buscarCercanosQuery(
+            @RequestParam Double latitud,
+            @RequestParam Double longitud,
+            @RequestParam(defaultValue = "5.0") Double radioKm) {
+        List<MonopatinConDistanciaDTO> resultado = monopatinService.encontrarMonopatinesCercanos(
+                latitud, longitud, radioKm);
+        return ResponseEntity.ok(resultado);
     }
 
 

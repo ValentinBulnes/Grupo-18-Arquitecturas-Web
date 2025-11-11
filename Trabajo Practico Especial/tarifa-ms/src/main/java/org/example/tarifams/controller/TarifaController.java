@@ -1,5 +1,6 @@
 package org.example.tarifams.controller;
 
+import org.example.tarifams.dto.TarifaDTO;
 import org.example.tarifams.entity.Tarifa;
 import org.example.tarifams.service.TarifaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ public class TarifaController {
     public TarifaController(TarifaService tarifaService) {
         this.tarifaService = tarifaService;
     }
+
     //  Crear nueva tarifa
     @PostMapping
     public ResponseEntity<Tarifa> crearTarifa(@RequestBody Tarifa tarifa) {
@@ -52,5 +54,16 @@ public class TarifaController {
     public ResponseEntity<Void> eliminarTarifa(@PathVariable Long id) {
         tarifaService.eliminarTarifa(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // punto F
+    @GetMapping("/vigente")
+    public ResponseEntity<TarifaDTO> obtenerTarifaVigente() {
+        try {
+            TarifaDTO dto = tarifaService.obtenerTarifaVigente();
+            return ResponseEntity.ok(dto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

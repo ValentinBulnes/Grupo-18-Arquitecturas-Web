@@ -16,7 +16,7 @@ spring:
         - id: usuario-ms
           uri: http://localhost:8001
           predicates:
-            - Path=/usuarios/**
+            - Path=/usuarios/**, /cuentas/**
 
         # --- Ruta para Monopatin MS ---
         - id: monopatin-ms
@@ -29,12 +29,6 @@ spring:
           uri: http://localhost:8005
           predicates:
             - Path=/paradas/**
-
-        # --- Ruta para Cuenta MS ---
-        - id: cuenta-ms
-          uri: http://localhost:8002
-          predicates:
-            - Path=/cuentas/**
 
         # --- Ruta para Tarifa MS ---
         - id: tarifa-ms

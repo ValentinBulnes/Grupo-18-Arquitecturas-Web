@@ -57,6 +57,9 @@ public class FacturaService {
             throw new RuntimeException("No se pudo obtener la cuenta: " + e.getMessage());
         }
 
+        if (!cuenta.isActiva()) {
+            throw new RuntimeException("La cuenta ID " + cuenta.getId() + " está anulada y no puede generar facturas.");
+        }
 
         double monto = viaje.getKilometrosRecorridos() * tarifa.getPrecioPorKm();
 

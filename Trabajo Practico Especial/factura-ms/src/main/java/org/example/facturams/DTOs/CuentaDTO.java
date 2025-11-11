@@ -9,4 +9,5 @@ public class CuentaDTO {
     private Long id;
     private String tipoCuenta;
     private Double saldo;
+    private boolean activa;
 }

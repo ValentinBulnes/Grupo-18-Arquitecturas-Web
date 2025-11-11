@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   parada-db:
     image: mysql:8.3.0
@@ -34,38 +36,50 @@ services:
     volumes:
       - usuario_data:/var/lib/mysql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  monopatin-db:
-    image: mongo:6.0
-    container_name: monopatin-db
-    ports:
-      - "27017:27017"
-    networks:
-      - app-network
-    volumes:
-      - mongo_data:/data/db
-
-  viaje-db:
+  cuenta-db:
     image: mysql:8.3.0
-    container_name: viaje-db
+    container_name: cuenta-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: viaje
+      MYSQL_DATABASE: cuenta
       MYSQL_USER: user
       MYSQL_PASSWORD: user
     ports:
-      - "3312:3306"
+      - "3311:3306"
     networks:
       - app-network
+    volumes:
+      - cuenta_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  monopatin-db:
+    image: mongo:latest
+    container_name: monopatin-db
+    ports:
+      - "27018:27017"
+    networks:
+      - app-network
+    environment:
+      MONGO_INITDB_DATABASE: monopatin_db
+
+  viaje-db:
+    image: mongo:latest
+    container_name: viaje-db
+    ports:
+      - "27015:27017"
+    networks:
+      - app-network
+    environment:
+      MONGO_INITDB_DATABASE: viaje_db
 
   tarifa-db:
     image: mysql:8.3.0
@@ -79,6 +93,8 @@ services:
       - "3313:3306"
     networks:
       - app-network
+    volumes:
+      - tarifa_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser"]
       interval: 10s
@@ -97,6 +113,8 @@ services:
       - "3314:3306"
     networks:
       - app-network
+    volumes:
+      - factura_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser"]
       interval: 10s
@@ -107,8 +125,11 @@ networks:
   app-network:
     driver: bridge
 
-
 volumes:
   mysql_data:
   mongo_data:
   usuario_data:
+  cuenta_data:
+  viaje_data:
+  tarifa_data:
+  factura_data:

@@ -1,4 +1,4 @@
-package com.example.administracionms.dto;
+package com.monopatines.monopatinms.DTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

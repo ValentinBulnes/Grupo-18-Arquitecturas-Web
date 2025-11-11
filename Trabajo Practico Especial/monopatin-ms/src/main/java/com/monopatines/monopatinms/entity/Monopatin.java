@@ -26,6 +26,7 @@ public class Monopatin {
     private boolean requiereMantenimiento;
     private Double latitud;
     private Double longitud;
+    private double kilometrajeMaximo;
 
     public void entrarEnMantenimiento(){
         this.estado = EstadoMonopatin.MANTENIMIENTO;
@@ -40,13 +41,11 @@ public class Monopatin {
         this.estado= EstadoMonopatin.EN_USO;
     }
 
-    public void actualizarEstadisticas(Double kmRecorridos, Long tiempoUso) {
-        this.kmTotales += kmRecorridos;
-        this.tiempoUsoTotal += tiempoUso;
-
+    public void actualizarEstadisticas(Double kmRecorridos) {
+        this.kmTotales = kmRecorridos;
         // Lógica para determinar si requiere mantenimiento
-        // Ejemplo: más de 1000 km o más de 500 horas de uso
-        if (this.kmTotales > 1000 || this.tiempoUsoTotal > 30000) {
+        // Ejemplo: más de 1000 km
+        if (this.kmTotales > 1000 ) {
             this.requiereMantenimiento = true;
         }
     }

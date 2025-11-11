@@ -2,13 +2,17 @@ package com.monopatines.monopatinms.service;
 
 import com.monopatines.monopatinms.DTO.MonopatinDTO;
 import com.monopatines.monopatinms.DTO.ParadaDTO;
+import com.monopatines.monopatinms.DTO.ViajeDTO;
 import com.monopatines.monopatinms.feignClients.ParadaFeignClient;
 import com.monopatines.monopatinms.entity.EstadoMonopatin;
 import com.monopatines.monopatinms.entity.Monopatin;
+import com.monopatines.monopatinms.feignClients.ViajeFeignClient;
 import com.monopatines.monopatinms.repository.MonopatinRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.monopatines.monopatinms.DTO.ReporteMonopatinDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 public class MonopatinService {
     private final MonopatinRepository monopatinRepository;
     private final ParadaFeignClient paradaFeignClient;
+    private final ViajeFeignClient viajeFeignClient;
 
     // recuperar todos
     public List<MonopatinDTO> findAll() {
@@ -66,6 +71,48 @@ public class MonopatinService {
                     .collect(Collectors.toList());
         }
         return null;
+    }
+
+    public List<ReporteMonopatinDTO> generarReporteUso(boolean incluirPausas) {
+        List<Monopatin> monopatines = monopatinRepository.findAll();
+        List<ReporteMonopatinDTO> reporte = new ArrayList<>();
+
+        for (Monopatin monopatin : monopatines) {
+            List<ViajeDTO> viajes = viajeFeignClient.getViajesPorMonopatin(monopatin.getId());
+
+            // Calcular km totales desde los viajes
+            double kmTotales = viajes.stream()
+                    .mapToDouble(ViajeDTO::getKilometrosRecorridos)
+                    .sum();
+
+            // Actualizar el monopatín con los km recorridos
+            monopatin.setKmTotales(kmTotales); // Usa set, no suma
+
+            // Verificar si requiere mantenimiento (según tu lógica de negocio)
+            monopatin.actualizarEstadisticas(kmTotales);
+            monopatinRepository.save(monopatin);
+
+            // Persistir cambios si es necesario
+            monopatinRepository.save(monopatin);
+
+            // Crear el DTO de reporte
+            ReporteMonopatinDTO reporteDTO = new ReporteMonopatinDTO();
+            reporteDTO.setMonopatinId(monopatin.getId());
+            reporteDTO.setKilometrosTotales(kmTotales);
+            reporteDTO.setRequiereMantenimiento(monopatin.isRequiereMantenimiento());
+
+            // Incluir tiempos de pausa si se solicita
+            if (incluirPausas) {
+                long tiempoPausaTotal = viajes.stream()
+                        .mapToLong(ViajeDTO::getTotalSegundosPausa)
+                        .sum();
+                reporteDTO.setTiempoTotalPausasSeg(tiempoPausaTotal);
+            }
+
+            reporte.add(reporteDTO);
+        }
+
+        return reporte;
     }
 
     //metodo auxiliar para convertir a dto

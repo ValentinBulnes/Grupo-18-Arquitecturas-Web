@@ -81,7 +81,13 @@ public class UsuarioService {
             }
         }
 
-        List<ViajeDTO> viajes = viajeFeignClient.getViajesPorPeriodo(desde.toString(), hasta.toString());
+        List<ViajeDTO> viajes = new ArrayList<>();
+        try {
+            viajes = viajeFeignClient.getViajesPorPeriodo(desde.toString(), hasta.toString());
+        } catch (Exception e) {
+            System.out.println("Error al conectar con viaje-ms: " + e.getMessage());
+        }
+
 
 
         List<UsuarioUsoDTO> resultado = new ArrayList<>();

@@ -108,7 +108,7 @@ public class ViajeController {
         return ResponseEntity.ok(resumen);
     }
 
-    @GetMapping
+    @GetMapping("/por-periodo")
     public ResponseEntity<List<ViajeDTO>> getViajesPorPeriodo(
             @RequestParam String fechaDesde,
             @RequestParam String fechaHasta) {

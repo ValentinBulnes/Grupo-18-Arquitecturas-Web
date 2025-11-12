@@ -1,0 +1,1261 @@
+{
+	"info": {
+		"_postman_id": "af54bdda-be01-411e-8cb7-1508012124a4",
+		"name": "Trabajo Practico Especial",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49306837",
+		"_collection_link": "https://valentinbulnes-7147994.postman.co/workspace/Valentin-Bulnes's-Workspace~f62666b6-0f9e-47dc-8f24-673afe910293/collection/49306837-af54bdda-be01-411e-8cb7-1508012124a4?action=share&source=collection_link&creator=49306837"
+	},
+	"item": [
+		{
+			"name": "Usuario-MS",
+			"item": [
+				{
+					"name": "Cuenta",
+					"item": [
+						{
+							"name": "POST Crear cuenta",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var respuesta = pm.response.json();\r",
+											"pm.collectionVariables.set(\"cuentaId\", respuesta.id);\r",
+											"\r",
+											"console.log(\"cuentaId guardado:\", respuesta.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"tipo\": \"PREMIUM\",\r\n    \"saldo\": 500.0,\r\n    \"mercadoPagoId\": \"mp-12345\",\r\n    \"fechaAlta\": \"2025-11-10\",\r\n    \"activa\": true,\r\n    \"usuarios\": [\r\n        {\r\n            \"id\": {{usuarioId}} \r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/cuentas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cuentas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Obtener todas las cuentas",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/cuentas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cuentas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET Obtener cuenta por ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/cuentas/{{cuentaId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cuentas",
+										"{{cuentaId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Descontar saldo",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/cuentas/{{cuentaId}}/descontar?monto=50.0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cuentas",
+										"{{cuentaId}}",
+										"descontar"
+									],
+									"query": [
+										{
+											"key": "monto",
+											"value": "50.0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Inhabilitar cuenta",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/cuentas/{{cuentaId}}/inhabilitar",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cuentas",
+										"{{cuentaId}}",
+										"inhabilitar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT Habilitar cuenta",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/cuentas/{{cuentaId}}/habilitar",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cuentas",
+										"{{cuentaId}}",
+										"habilitar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Eliminar cuenta",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/cuentas/{{cuentaId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cuentas",
+										"{{cuentaId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "POST Crear usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var respuesta = pm.response.json();\r",
+									"pm.collectionVariables.set(\"usuarioId\", respuesta.id);\r",
+									"\r",
+									"console.log(\"usuarioId guardado:\", respuesta.id);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Juan\",\r\n    \"apellido\": \"Perez\",\r\n    \"email\": \"juanperez@ejemplo.com\",\r\n    \"telefono\": \"249-123456\",\r\n    \"latitud\": -37.321,\r\n    \"longitud\": -59.135\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener todos los usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener usuario por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/{{usuarioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								"{{usuarioId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Eliminar usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/{{usuarioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								"{{usuarioId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Modificar usuario",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Pedro\",\r\n    \"apellido\": \"Perez\",\r\n    \"email\": \"juanperez@ejemplo.com\",\r\n    \"telefono\": \"111-2222\",\r\n    \"latitud\": -37.321,\r\n    \"longitud\": -59.135\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/{{usuarioId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								"{{usuarioId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Parada-MS",
+			"item": [
+				{
+					"name": "POST Crear parada",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var respuesta = pm.response.json();\r",
+									"\r",
+									"pm.collectionVariables.set(\"paradaId\", respuesta.id);\r",
+									"\r",
+									"console.log(\"ID de Parada guardado:\", respuesta.id);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Parada Plaza Centro\",\r\n    \"direccion\": \"Av. España 500\",\r\n    \"latitud\": -37.328,\r\n    \"longitud\": -59.139\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/paradas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"paradas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Crear parada (destino)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var respuesta = pm.response.json();\r",
+									"pm.collectionVariables.set(\"paradaId_Destino\", respuesta.id);\r",
+									"\r",
+									"console.log(\"paradaId_Destino guardado:\", respuesta.id);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Plaza 2\",\r\n    \"direccion\": \"Av. Rivadavia 800\",\r\n    \"latitud\": -37.330,\r\n    \"longitud\": -59.145\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/paradas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"paradas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener todas las paradas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/paradas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"paradas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener parada por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/paradas/{{paradaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"paradas",
+								"{{paradaId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Actualizar parada",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {{paradaId}}, \r\n    \"nombre\": \"Parada Plaza (Modificada)\",\r\n    \"direccion\": \"Av. España 550\",\r\n    \"latitud\": -37.3281,\r\n    \"longitud\": -59.1391\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/paradas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"paradas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Eliminar parada",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/paradas/{{paradaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"paradas",
+								"{{paradaId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Buscar parada por Dirección",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/paradas/buscar/direccion/Av. España 500",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"paradas",
+								"buscar",
+								"direccion",
+								"Av. España 500"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Monopatin-MS",
+			"item": [
+				{
+					"name": "POST Crear monopatin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var respuesta = pm.response.json();\r",
+									"pm.collectionVariables.set(\"monopatinId\", respuesta.id);\r",
+									"\r",
+									"console.log(\"monopatinId (Mongo) guardado:\", respuesta.id);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"estado\": \"DISPONIBLE\",\r\n    \"kmTotales\": 0.0,\r\n    \"tiempoUsoTotal\": 0,\r\n    \"paradaActualID\": {{paradaId}},\r\n    \"fechaAlta\": \"2025-11-10T10:00:00\",\r\n    \"ultimoMantenimiento\": \"2025-11-10T10:00:00\",\r\n    \"requiereMantenimiento\": false,\r\n    \"latitud\": -37.328,\r\n    \"longitud\": -59.139,\r\n    \"kilometrajeMaximo\": 1000.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/monopatines",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"monopatines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener todos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"estado\": \"DISPONIBLE\",\r\n    \"kmTotales\": 0.0,\r\n    \"tiempoUsoTotal\": 0,\r\n    \"paradaActualID\": 6,\r\n    \"fechaAlta\": \"2025-11-10T10:00:00\",\r\n    \"ultimoMantenimiento\": \"2025-11-10T10:00:00\",\r\n    \"requiereMantenimiento\": false,\r\n    \"latitud\": -37.328,\r\n    \"longitud\": -59.139,\r\n    \"kilometrajeMaximo\": 1000.0\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/monopatines",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"monopatines"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener por ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"estado\": \"DISPONIBLE\",\r\n    \"kmTotales\": 0.0,\r\n    \"tiempoUsoTotal\": 0,\r\n    \"paradaActualID\": 6,\r\n    \"fechaAlta\": \"2025-11-10T10:00:00\",\r\n    \"ultimoMantenimiento\": \"2025-11-10T10:00:00\",\r\n    \"requiereMantenimiento\": false,\r\n    \"latitud\": -37.328,\r\n    \"longitud\": -59.139,\r\n    \"kilometrajeMaximo\": 1000.0\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/monopatines/{{monopatinId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"monopatines",
+								"{{monopatinId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET por Parada ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/monopatines/parada/{{paradaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"monopatines",
+								"parada",
+								"{{paradaId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET por Estado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/monopatines/estado/DISPONIBLE",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"monopatines",
+								"estado",
+								"DISPONIBLE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Reporte de Uso (km)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/monopatines/uso?incluirPausas=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"monopatines",
+								"uso"
+							],
+							"query": [
+								{
+									"key": "incluirPausas",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Buscar cercanos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/monopatines/cercanos?latitud=-37.328&longitud=-59.139&radioKm=1.0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"monopatines",
+								"cercanos"
+							],
+							"query": [
+								{
+									"key": "latitud",
+									"value": "-37.328"
+								},
+								{
+									"key": "longitud",
+									"value": "-59.139"
+								},
+								{
+									"key": "radioKm",
+									"value": "1.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Modificar monopatin",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"estado\": \"MANTENIMIENTO\",\r\n    \"paradaActualID\": {{paradaId}},\r\n    \"latitud\": -37.328,\r\n    \"longitud\": -59.139,\r\n    \"requiereMantenimiento\": true,\r\n    \"kilometrajeMaximo\": 1000.0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/monopatines/{{monopatinId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"monopatines",
+								"{{monopatinId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tarifa-MS",
+			"item": [
+				{
+					"name": "POST Crear tarifa",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"precioPorKm\": 150.0,\r\n    \"precioPorMinuto\": 20.0,\r\n    \"tarifaExtraPorPausa\": 50.0,\r\n    \"fechaInicioVigencia\": \"2025-11-11\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tarifas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tarifas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Listar todas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tarifas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tarifas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tarifas/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tarifas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener tarifa Actual",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tarifas/actual",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tarifas",
+								"actual"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener tarifa Vigente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tarifas/vigente",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tarifas",
+								"vigente"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Modificar tarifa",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"precioPorKm\": 160.0,\r\n    \"precioPorMinuto\": 25.0,\r\n    \"tarifaExtraPorPausa\": 50.0,\r\n    \"fechaInicioVigencia\": \"2025-02-01\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tarifas/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tarifas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Eliminar tarifa",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tarifas/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tarifas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Viaje-MS",
+			"item": [
+				{
+					"name": "POST Iniciar viaje",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var respuesta = pm.response.json();\r",
+									"pm.collectionVariables.set(\"viajeId\", respuesta.id);\r",
+									"\r",
+									"console.log(\"viajeId (Mongo) guardado:\", respuesta.id);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usuarioId\": {{usuarioId}},\r\n    \"monopatinId\": \"{{monopatinId}}\",\r\n    \"paradaOrigenId\": {{paradaId}},\r\n    \"fechaInicio\": \"2025-11-10T12:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/viajes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viajes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Finalizar viaje",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usuarioId\": {{usuarioId}},\r\n    \"monopatinId\": \"{{monopatinId}}\",\r\n    \"paradaOrigenId\": {{paradaId}},\r\n    \"paradaDestinoId\": {{paradaId_Destino}}, \r\n    \"fechaInicio\": \"2025-11-10T12:00:00\",\r\n    \"fechaFin\": \"2025-11-10T12:15:00\",\r\n    \"kilometrosRecorridos\": 2.5,\r\n    \"totalSegundosPausa\": 180\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/viajes/{{viajeId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viajes",
+								"{{viajeId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/viajes/{{viajeId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viajes",
+								"{{viajeId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener todos (o filtrar)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/viajes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viajes"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "4",
+									"disabled": true
+								},
+								{
+									"key": "monopatinId",
+									"value": "691290da88ee946071f1bae6",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Reporte Monopatines (más viajes)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/viajes/monopatines/mas-viajes?anio=2025&cantidadMinima=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viajes",
+								"monopatines",
+								"mas-viajes"
+							],
+							"query": [
+								{
+									"key": "anio",
+									"value": "2025"
+								},
+								{
+									"key": "cantidadMinima",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Reporte uso por Cuenta",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/viajes/uso-por-cuenta?cuentaId={{cuentaId}}&usuarioId={{usuarioId}}&fechaDesde=2025-01-01&fechaHasta=2025-12-31&incluirUsuariosRelacionados=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"viajes",
+								"uso-por-cuenta"
+							],
+							"query": [
+								{
+									"key": "cuentaId",
+									"value": "{{cuentaId}}"
+								},
+								{
+									"key": "usuarioId",
+									"value": "{{usuarioId}}"
+								},
+								{
+									"key": "fechaDesde",
+									"value": "2025-01-01"
+								},
+								{
+									"key": "fechaHasta",
+									"value": "2025-12-31"
+								},
+								{
+									"key": "incluirUsuariosRelacionados",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Factura-MS",
+			"item": [
+				{
+					"name": "POST Crear factura (Facturar Viaje)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var respuesta = pm.response.json();\r",
+									"pm.collectionVariables.set(\"facturaId\", respuesta.id);\r",
+									"\r",
+									"console.log(\"facturaId guardado:\", respuesta.id);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"viajeId\": \"{{viajeId}}\",\r\n    \"cuentaId\": {{cuentaId}},\r\n    \"usuarioId\": {{usuarioId}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/facturas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"facturas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener todas las facturas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/facturas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"facturas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Obtener factura por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/facturas/{{facturaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"facturas",
+								"{{facturaId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Modificar factura",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fechaEmision\": \"2025-11-11\",\r\n    \"montoTotal\": 999.0,\r\n    \"descripcion\": \"Modificación manual de prueba\",\r\n    \"viajeId\": \"69125100896df624bb15b73a\",\r\n    \"cuentaId\": 1,\r\n    \"usuarioId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/facturas/{{facturaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"facturas",
+								"{{facturaId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Eliminar factura",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/facturas/{{facturaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"facturas",
+								"{{facturaId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Reporte Total Facturado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/facturas/total?anio=2025&mesInicio=1&mesFin=12",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"facturas",
+								"total"
+							],
+							"query": [
+								{
+									"key": "anio",
+									"value": "2025"
+								},
+								{
+									"key": "mesInicio",
+									"value": "1"
+								},
+								{
+									"key": "mesFin",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "paradaId",
+			"value": ""
+		},
+		{
+			"key": "usuarioId",
+			"value": ""
+		},
+		{
+			"key": "cuentaId",
+			"value": ""
+		},
+		{
+			"key": "monopatinId",
+			"value": ""
+		},
+		{
+			"key": "viajeId",
+			"value": ""
+		},
+		{
+			"key": "facturaId",
+			"value": ""
+		},
+		{
+			"key": "paradaId_Destino",
+			"value": ""
+		}
+	]
+}

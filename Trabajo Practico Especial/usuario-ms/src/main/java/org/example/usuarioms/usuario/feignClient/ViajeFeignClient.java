@@ -10,6 +10,6 @@ import java.util.List;
 @FeignClient(name = "viaje-ms", url = "http://localhost:8007")
 public interface ViajeFeignClient {
 
-    @GetMapping("/viajes")
+    @GetMapping("/viajes/por-periodo")
     List<ViajeDTO> getViajesPorPeriodo(@RequestParam String fechaDesde, @RequestParam String fechaHasta);
 }

@@ -52,6 +52,12 @@ public class MonopatinController {
         return ResponseEntity.ok(m);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Monopatin> eliminarMonopatin(@PathVariable("id") String id){
+        monopatinService.eliminarMonopatin(id);
+        return ResponseEntity.noContent().build();
+    }
+
     // Endpoint para buscar monopatines en una parada
     @GetMapping("/parada/{paradaId}")
     public ResponseEntity<List<MonopatinDTO>> getMonopatinesEnParada(@PathVariable("paradaId") long paradaId) {

@@ -40,4 +40,5 @@ public interface ViajeRepository extends MongoRepository<Viaje, String> {
                         LocalDateTime startOfYear,
                         LocalDateTime endOfYear,
                         int cantidadMinima);
+        List<Viaje> findAllByFechaInicioBetween(LocalDateTime inicio, LocalDateTime fin);
 }

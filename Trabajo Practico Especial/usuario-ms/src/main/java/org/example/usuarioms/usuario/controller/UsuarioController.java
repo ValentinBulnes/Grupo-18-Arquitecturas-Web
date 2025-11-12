@@ -1,11 +1,13 @@
 package org.example.usuarioms.usuario.controller;
 
+import org.example.usuarioms.usuario.DTO.UsuarioUsoDTO;
 import org.example.usuarioms.usuario.entity.Usuario;
 import org.example.usuarioms.usuario.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -55,5 +57,18 @@ public class UsuarioController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/uso-frecuente")
+    public ResponseEntity<List<UsuarioUsoDTO>> getUsuariosFrecuentes(
+            @RequestParam String desde,
+            @RequestParam String hasta,
+            @RequestParam String tipo) {
+
+        LocalDate inicio = LocalDate.parse(desde);
+        LocalDate fin = LocalDate.parse(hasta);
+
+        List<UsuarioUsoDTO> resultado = usuarioService.obtenerUsuariosFrecuentes(inicio, fin, tipo);
+        return ResponseEntity.ok(resultado);
+
     }
 }

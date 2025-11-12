@@ -5,6 +5,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 
+import com.example.viajems.DTO.ViajeDTO;
 import com.example.viajems.DTO.ViajesPorMonopatinDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -107,4 +108,26 @@ public class ViajeController {
         return ResponseEntity.ok(resumen);
     }
 
+    @GetMapping
+    public ResponseEntity<List<ViajeDTO>> getViajesPorPeriodo(
+            @RequestParam String fechaDesde,
+            @RequestParam String fechaHasta) {
+
+        LocalDate desde;
+        LocalDate hasta;
+
+        try {
+            desde = LocalDate.parse(fechaDesde);
+            hasta = LocalDate.parse(fechaHasta);
+        } catch (DateTimeParseException ex) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        if (desde.isAfter(hasta)) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        List<ViajeDTO> resultado = viajeService.getViajesPorPeriodo(desde, hasta);
+        return ResponseEntity.ok(resultado);
+    }
 }

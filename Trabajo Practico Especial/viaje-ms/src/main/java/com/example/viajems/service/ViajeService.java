@@ -2,14 +2,11 @@ package com.example.viajems.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.example.viajems.DTO.CuentaDTO;
 import com.example.viajems.DTO.UsuarioDTO;
+import com.example.viajems.DTO.ViajeDTO;
 import com.example.viajems.DTO.ViajesPorMonopatinDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -135,6 +132,23 @@ public class ViajeService {
         resp.put("cantidadViajes", viajes.size());
 
         return resp;
+    }
+    public List<ViajeDTO> getViajesPorPeriodo(LocalDate fechaDesde, LocalDate fechaHasta) {
+        LocalDateTime inicio = fechaDesde.atStartOfDay();
+        LocalDateTime fin = fechaHasta.atTime(23, 59, 59);
+
+        List<Viaje> viajes = viajeRepository.findAllByFechaInicioBetween(inicio, fin);
+
+        List<ViajeDTO> resultado = new ArrayList<>();
+        for (Viaje v : viajes) {
+            ViajeDTO dto = new ViajeDTO();
+            dto.setUsuarioId(v.getUsuarioId());
+            dto.setFechaInicio(v.getFechaInicio());
+            dto.setFechaFin(v.getFechaFin());
+            resultado.add(dto);
+        }
+
+        return resultado;
     }
 
 }

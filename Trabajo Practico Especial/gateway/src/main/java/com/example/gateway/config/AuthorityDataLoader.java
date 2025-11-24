@@ -15,16 +15,22 @@ public class AuthorityDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        // ROLE: ADMIN
+        // ROL: ADMIN
         if (!authorityRepository.existsById("ADMIN")) {
             authorityRepository.save(new Authority("ADMIN"));
             System.out.println(">>> Rol ADMIN creado");
         }
 
-        // ROLE: USER
+        // ROL: USER
         if (!authorityRepository.existsById("USER")) {
             authorityRepository.save(new Authority("USER"));
             System.out.println(">>> Rol USER creado");
+        }
+
+        // ROL: PREMIUM
+        if (!authorityRepository.existsById("PREMIUM")) {
+            authorityRepository.save(new Authority("PREMIUM"));
+            System.out.println(">>> Rol PREMIUM creado");
         }
 
         System.out.println(">>> Roles cargados correctamente.");

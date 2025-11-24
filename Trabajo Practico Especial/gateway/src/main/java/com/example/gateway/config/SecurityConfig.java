@@ -84,8 +84,11 @@ public class SecurityConfig {
                         // Consultar sus propios consumos
                         .pathMatchers(HttpMethod.GET, "/viajes/uso-por-cuenta").hasAuthority(AuthorityConstant._USER)
 
+                        // 4. EXCLUSIVO PREMIUM (Servicio de IA)
+                        .pathMatchers("/chat/**").hasAuthority(AuthorityConstant._PREMIUM)
 
-                        // 4. COMPARTIDOS (Autenticados)
+
+                        // 5. COMPARTIDOS (Autenticados)
                         // Ver paradas, ver tarifas vigentes, ver monopatines (lectura)
                         .pathMatchers(HttpMethod.GET, "/paradas/**").authenticated()
                         .pathMatchers(HttpMethod.GET, "/tarifas/**").authenticated()

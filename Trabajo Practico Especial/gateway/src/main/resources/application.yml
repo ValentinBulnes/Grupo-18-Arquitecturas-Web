@@ -1,4 +1,4 @@
-=server:
+server:
   port: 8080   # Puerto del Gateway
 
 spring:
@@ -6,9 +6,9 @@ spring:
     name: gateway
 
   datasource:
-    url: jdbc:mysql://localhost:3306/gateway_auth?createDatabaseIfNotExist=true&serverTimezone=UTC
-    username: root
-    password: root
+    url: jdbc:mysql://localhost:3308/auth?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: user
+    password: user
   jpa:
     hibernate:
       ddl-auto: update
@@ -25,7 +25,8 @@ spring:
         - id: usuario-ms
           uri: http://localhost:8001
           predicates:
-            - Path=/usuarios/**, /cuentas/**
+            - Path=/usuarios/**
+            - Path=/cuentas/**
 
         # --- Monopatin MS ---
         - id: monopatin-ms

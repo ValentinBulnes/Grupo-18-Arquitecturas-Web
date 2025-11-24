@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class TokenProvider {
-    private final Logger log = LoggerFactory.getLogger(com.example.gateway.security.TokenProvider.class);
+
+    private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
     private static final String SECRET =
             "j7ZookpUTYxclaULynjypGQVKMYXqOXMI+/1sQ2gOV1BF6VOHw6OzYj9RNZY4GcHAE3Igrah3MZ26oLrY/3y4Q==";
@@ -38,8 +39,12 @@ public class TokenProvider {
     public TokenProvider() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.jwtParser = Jwts.parser().verifyWith(key).build();
-        this.tokenValidityInMilliseconds = 1000 * 86400; // 24 horas
+
+        this.jwtParser = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build();
+
+        this.tokenValidityInMilliseconds = 1000 * 86400; // 24 h
     }
 
     public String createToken(Authentication authentication) {
@@ -51,19 +56,18 @@ public class TokenProvider {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
-        return Jwts
-                .builder()
-                .subject(authentication.getName())
+        return Jwts.builder()
+                .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
-                .expiration(validity)
-                .issuedAt(new Date())
-                .signWith(key)
+                .setExpiration(validity)
+                .setIssuedAt(new Date())
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public Authentication getAuthentication(String token) {
 
-        Claims claims = jwtParser.parseSignedClaims(token).getPayload();
+        Claims claims = jwtParser.parseClaimsJws(token).getBody();
 
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
@@ -78,8 +82,8 @@ public class TokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            final var claims =
-                    Jwts.parser().verifyWith(this.key).build().parseSignedClaims(authToken);
+
+            Jws<Claims> claims = jwtParser.parseClaimsJws(authToken);
 
             this.checkTokenExpiration(claims);
 
@@ -99,13 +103,9 @@ public class TokenProvider {
     }
 
     private void checkTokenExpiration(Jws<Claims> token) {
-        try {
-            final var payload = token.getPayload();
-            if (payload.getExpiration().before(new Date()) ||
-                    payload.getIssuedAt().after(new Date((new Date()).getTime() + this.tokenValidityInMilliseconds))) {
-                throw new ExpiredJwtException(null, null, null);
-            }
-        } catch (Exception e) {
+        Claims payload = token.getBody();
+
+        if (payload.getExpiration().before(new Date())) {
             throw new ExpiredJwtException(null, null, null);
         }
     }

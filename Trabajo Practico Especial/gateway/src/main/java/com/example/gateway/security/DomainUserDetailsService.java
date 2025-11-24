@@ -1,54 +1,44 @@
 package com.example.gateway.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.gateway.entity.Authority;
+import com.example.gateway.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component("userDetailsService")
-public class DomainUserDetailsService implements UserDetailsService {
-
-    private final Logger log = LoggerFactory.getLogger(DomainUserDetailsService.class);
+@RequiredArgsConstructor
+public class DomainUserDetailsService implements ReactiveUserDetailsService {
 
     private final UserRepository userRepository;
 
-    public DomainUserDetailsService( UserRepository userRepository ) {
-        this.userRepository = userRepository;
-    }
-
     @Override
-    @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(final String username ) {
-        log.debug("Authenticating {}", username);
+    public Mono<UserDetails> findByUsername(String username) {
 
-        //final var user = this.userRepository.findOneWithAuthoritiesByUsernameIgnoreCase( username ).orElseThrow();
-        //return this.createSpringSecurityUser( user );
+        return Mono.fromCallable(() ->
+                        userRepository.findOneWithAuthoritiesByUsernameIgnoreCase(username.toLowerCase())
+                                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username))
+                )
+                .map(user -> {
+                    List<GrantedAuthority> authorities = user.getAuthorities()
+                            .stream()
+                            .map(auth -> new SimpleGrantedAuthority(auth.getName()))
+                            .collect(Collectors.toList());
 
-        return userRepository
-                .findOneWithAuthoritiesByUsernameIgnoreCase( username.toLowerCase() )
-                .map( this::createSpringSecurityUser )
-                .orElseThrow( () -> new UsernameNotFoundException( "El usuario " + username + " no existe" ) );
+                    return new org.springframework.security.core.userdetails.User(
+                            user.getUsername(),
+                            user.getPassword(),
+                            authorities
+                    );
+
+                });
     }
-
-    private UserDetails createSpringSecurityUser( User user ) {
-        List<GrantedAuthority> grantedAuthorities = user
-                .getAuthorities()
-                .stream()
-                .map( Authority::getName )
-                .map( SimpleGrantedAuthority::new )
-                .collect( Collectors.toList() );
-
-        return new org.springframework.security.core.userdetails.User( user.getUsername(), user.getPassword(), grantedAuthorities );
-    }
-
 }

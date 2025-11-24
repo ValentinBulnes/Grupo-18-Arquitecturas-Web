@@ -1,70 +1,72 @@
 package com.example.gateway.security.jwt;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
-import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
+import java.nio.charset.StandardCharsets;
 
-public class JwtFilter extends OncePerRequestFilter {
-    private final Logger log = LoggerFactory.getLogger( com.example.gateway.security.JwtFilter.class );
+@Component
+@RequiredArgsConstructor
+public class JwtFilter implements WebFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
-
     private final TokenProvider tokenProvider;
 
-    public JwtFilter( TokenProvider tokenProvider ) {
-        this.tokenProvider = tokenProvider;
-    }
-
     @Override
-    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String jwt = resolveToken( request );
-        try {
-            if ( StringUtils.hasText(jwt) && this.tokenProvider.validateToken( jwt ) ) {
-                Authentication authentication = this.tokenProvider.getAuthentication( jwt );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+
+        String jwt = resolveToken(exchange);
+
+        if (StringUtils.hasText(jwt)) {
+            try {
+                if (tokenProvider.validateToken(jwt)) {
+                    Authentication authentication = tokenProvider.getAuthentication(jwt);
+
+                    return chain.filter(exchange)
+                            .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));
+                }
+            } catch (ExpiredJwtException ex) {
+                return writeExpiredTokenResponse(exchange);
             }
-        } catch ( ExpiredJwtException e ) {
-            log.info( "REST request UNAUTHORIZED - La sesión ha expirado." );
-            response.setStatus( 498 );
-            response.setContentType( MediaType.APPLICATION_JSON_VALUE );
-            response.getWriter().write( new com.example.gateway.security.JwtFilter.JwtErrorDTO().toJson() );
-            return;
         }
-        filterChain.doFilter(request, response);
+
+        return chain.filter(exchange);
     }
 
-    private String resolveToken( HttpServletRequest request ) {
-        String bearerToken = request.getHeader( AUTHORIZATION_HEADER );
-        if ( StringUtils.hasText( bearerToken ) && bearerToken.startsWith( "Bearer " ) ) {
-            return bearerToken.substring(7 );
+    private String resolveToken(ServerWebExchange exchange) {
+        String bearerToken = exchange.getRequest()
+                .getHeaders()
+                .getFirst(AUTHORIZATION_HEADER);
+
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
         return null;
     }
 
-    @Getter
-    private static class JwtErrorDTO {
-        private final String message = "Token expired";
-        private final String date = LocalDateTime.now().toString();
+    private Mono<Void> writeExpiredTokenResponse(ServerWebExchange exchange) {
+        var response = exchange.getResponse();
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        public JwtErrorDTO(){}
+        String body = """
+                { "message": "Token expired" }
+                """;
 
-        public String toJson() {
-            try {
-                return new ObjectMapper().writeValueAsString(this);
-            } catch (RuntimeException | JsonProcessingException ex ) {
-                return String.format("{ message: %s }", this.message );
-            }
-        }
+        var buffer = response.bufferFactory()
+                .wrap(body.getBytes(StandardCharsets.UTF_8));
+
+        return response.writeWith(Mono.just(buffer));
     }
-
+}

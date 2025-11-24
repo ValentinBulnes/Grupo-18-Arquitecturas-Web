@@ -52,7 +52,6 @@ public class DataSourceManager {
         this.mongoTemplateViajes = mongoTemplateViajes;
     }
 
-    // === JDBC ===
     public JdbcTemplate getJdbcTemplate(String database) {
         JdbcTemplate template = jdbcTemplates.get(database.toLowerCase());
         if (template == null) {
@@ -69,7 +68,6 @@ public class DataSourceManager {
         return ds;
     }
 
-    // === MONGO ===
     public MongoTemplate getMongoTemplate(String database) {
         if (database.equalsIgnoreCase("monopatines")) {
             return mongoTemplateMonopatines;
@@ -85,9 +83,6 @@ public class DataSourceManager {
                db.equalsIgnoreCase("viajes");
     }
 
-    /**
-     * Detecta automáticamente la base de datos
-     */
     public String detectDatabase(String sql) {
         String lower = sql.toLowerCase();
 

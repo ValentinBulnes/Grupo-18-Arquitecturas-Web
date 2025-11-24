@@ -57,6 +57,12 @@ spring:
           predicates:
             - Path=/facturas/**
 
+        # --- Chat MS ---
+        - id: chat-ms
+          uri: http://localhost:8082
+          predicates:
+            - Path=/chat/**
+
 
 app:
   jwt:

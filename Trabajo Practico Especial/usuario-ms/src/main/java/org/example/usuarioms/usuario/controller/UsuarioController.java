@@ -1,7 +1,9 @@
 package org.example.usuarioms.usuario.controller;
 
+import org.example.usuarioms.usuario.DTO.PagoRequest;
 import org.example.usuarioms.usuario.DTO.UsuarioUsoDTO;
 import org.example.usuarioms.usuario.entity.Usuario;
+import org.example.usuarioms.usuario.feignClient.MercadoPagoClient;
 import org.example.usuarioms.usuario.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +18,10 @@ public class UsuarioController {
 
     private UsuarioService usuarioService;
 
+
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
+
     }
 
     // Crear usuario
@@ -70,5 +74,16 @@ public class UsuarioController {
         List<UsuarioUsoDTO> resultado = usuarioService.obtenerUsuariosFrecuentes(inicio, fin, tipo);
         return ResponseEntity.ok(resultado);
 
+    }
+
+    @PostMapping("/{id}/pagar")
+    public ResponseEntity<String> pagar(@PathVariable Long id, @RequestParam Double monto) {
+        boolean resultado = usuarioService.realizarPago(id, monto);
+
+        if (resultado) {
+            return ResponseEntity.ok("Pago aprobado por MercadoPago (mock)");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pago rechazado");
+        }
     }
 }

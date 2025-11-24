@@ -1,6 +1,7 @@
 package com.monopatines.monopatinms.service;
 
 import com.monopatines.monopatinms.DTO.*;
+import com.monopatines.monopatinms.feignClients.MapasFeignClient;
 import com.monopatines.monopatinms.feignClients.ParadaFeignClient;
 import com.monopatines.monopatinms.entity.EstadoMonopatin;
 import com.monopatines.monopatinms.entity.Monopatin;
@@ -23,6 +24,8 @@ public class MonopatinService {
     private final MonopatinRepository monopatinRepository;
     private final ParadaFeignClient paradaFeignClient;
     private final ViajeFeignClient viajeFeignClient;
+    private final MapasFeignClient mapasFeignClient;
+
 
     // recuperar todos
     public List<MonopatinDTO> findAll() {
@@ -208,5 +211,8 @@ public class MonopatinService {
                     "Error al comunicarse con el servicio de paradas."
             );
         }
+    }
+    public List<MonopatinDTO> obtenerMonopatinesCercanos(double lat, double lon) {
+        return mapasFeignClient.buscarCercanos(lat, lon);
     }
 }

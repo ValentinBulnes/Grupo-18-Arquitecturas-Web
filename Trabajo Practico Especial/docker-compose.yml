@@ -118,6 +118,21 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  mercadopago-ms:
+    build: ./mercadopago-ms
+    container_name: mercadopago-ms
+    ports:
+      - "8089:8089"
+    networks:
+      - app-network
+  mapas-ms:
+    build: ./mapas-ms
+    container_name: mapas-ms
+    ports:
+      - "8090:8090"
+    networks:
+      - app-network
+
 
   auth-db:
     image: mysql:8.3.0

@@ -2,9 +2,11 @@ package org.example.usuarioms.usuario.service;
 
 import jakarta.persistence.Access;
 import org.example.usuarioms.cuenta.entity.Cuenta;
+import org.example.usuarioms.usuario.DTO.PagoRequest;
 import org.example.usuarioms.usuario.DTO.UsuarioUsoDTO;
 import org.example.usuarioms.usuario.DTO.ViajeDTO;
 import org.example.usuarioms.usuario.entity.Usuario;
+import org.example.usuarioms.usuario.feignClient.MercadoPagoClient;
 import org.example.usuarioms.usuario.feignClient.ViajeFeignClient;
 import org.example.usuarioms.usuario.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +25,12 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
     private  ViajeFeignClient  viajeFeignClient;
+    private final MercadoPagoClient mercadoPagoClient;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, ViajeFeignClient viajeFeignClient) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ViajeFeignClient viajeFeignClient, MercadoPagoClient mercadoPagoClient) {
         this.usuarioRepository = usuarioRepository;
         this.viajeFeignClient = viajeFeignClient;
+        this.mercadoPagoClient = mercadoPagoClient;
     }
 
     // Insertar usuario
@@ -112,6 +116,13 @@ public class UsuarioService {
         resultado.sort((a, b) -> Integer.compare(b.getCantidadViajes(), a.getCantidadViajes()));
 
         return resultado;
+    }
+    public boolean realizarPago(Long cuentaId, Double monto) {
+        PagoRequest request = new PagoRequest();
+        request.setCuentaId(cuentaId);
+        request.setMonto(monto);
+
+        return mercadoPagoClient.realizarPago(request);
     }
 
 }

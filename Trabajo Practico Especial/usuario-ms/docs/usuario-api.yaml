@@ -1,0 +1,349 @@
+openapi: 3.0.1
+info:
+  title: API Microservicio Usuario
+  description: API para gestionar usuarios y cuentas
+  version: 1.0.0
+servers:
+  - url: http://localhost:8001
+    description: Servidor local de desarrollo
+
+paths:
+  /usuarios:
+    post:
+      summary: Crear un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+      responses:
+        '201':
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+
+    get:
+      summary: Obtener todos los usuarios
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Usuario'
+
+  /usuarios/{id}:
+    get:
+      summary: Obtener usuario por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuario no encontrado
+
+    put:
+      summary: Actualizar usuario por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+      responses:
+        '200':
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuario no encontrado
+
+    delete:
+      summary: Eliminar usuario por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Usuario eliminado
+        '404':
+          description: Usuario no encontrado
+
+  /usuarios/uso-frecuente:
+    get:
+      summary: Obtener usuarios frecuentes en un periodo
+      parameters:
+        - in: query
+          name: desde
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: hasta
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: tipo
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de usuarios frecuentes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsuarioUsoDTO'
+        '400':
+          description: Error en formato de fechas
+
+  /cuentas:
+    post:
+      summary: Crear una nueva cuenta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cuenta'
+      responses:
+        '201':
+          description: Cuenta creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cuenta'
+
+    get:
+      summary: Obtener todas las cuentas
+      responses:
+        '200':
+          description: Lista de cuentas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cuenta'
+
+    /cuentas/{id}:
+      get:
+        summary: Obtener cuenta por ID
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          '200':
+            description: Cuenta encontrada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Cuenta'
+          '404':
+            description: Cuenta no encontrada
+
+      delete:
+        summary: Eliminar cuenta por ID
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          '204':
+            description: Cuenta eliminada
+          '404':
+            description: Cuenta no encontrada
+
+    /cuentas/{id}/descontar:
+      put:
+        summary: Descontar saldo de una cuenta
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+              format: int64
+          - in: query
+            name: monto
+            required: true
+            schema:
+              type: number
+              format: double
+        responses:
+          '200':
+            description: Cuenta actualizada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Cuenta'
+          '400':
+            description: Error al descontar saldo
+
+    /cuentas/{id}/inhabilitar:
+      put:
+        summary: Inhabilitar una cuenta
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          '200':
+            description: Cuenta inhabilitada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Cuenta'
+          '404':
+            description: Cuenta no encontrada
+
+    /cuentas/{id}/habilitar:
+      put:
+        summary: Habilitar una cuenta
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+              format: int64
+        responses:
+          '200':
+            description: Cuenta habilitada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Cuenta'
+          '404':
+            description: Cuenta no encontrada
+
+components:
+  schemas:
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        apellido:
+          type: string
+        email:
+          type: string
+        telefono:
+          type: string
+        latitud:
+          type: number
+          format: double
+        longitud:
+          type: number
+          format: double
+
+    UsuarioUsoDTO:
+      type: object
+      properties:
+        usuarioId:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        tipoUsuario:
+          type: string
+        cantidadViajes:
+          type: integer
+
+    Cuenta:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        tipo:
+          type: string
+          description: Tipo de cuenta (BÁSICA o PREMIUM)
+        saldo:
+          type: number
+          format: double
+        mercadoPagoId:
+          type: string
+        fechaAlta:
+          type: string
+          format: date
+        activa:
+          type: boolean
+
+      CuentaDTO:
+        type: object
+        properties:
+          tipo:
+            type: string
+          saldo:
+            type: number
+            format: double
+          fechaAlta:
+            type: string
+            format: date
+          activa:
+            type: boolean
+
+      UsuarioDTO:
+        type: object
+        properties:
+          nombre:
+            type: string
+          apellido:
+            type: string
+          email:
+            type: string
+          telefono:
+            type: string
+          latitud:
+            type: number
+            format: double
+          longitud:
+            type: number
+            format: double

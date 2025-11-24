@@ -1,0 +1,151 @@
+openapi: 3.0.1
+info:
+  title: API Microservicio Parada
+  description: API para gestionar paradas de monopatines
+  version: 1.0.0
+servers:
+  - url: http://localhost:8005
+
+paths:
+  /paradas:
+    get:
+      summary: Obtener todas las paradas
+      responses:
+        '200':
+          description: Lista de paradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Parada'
+        '204':
+          description: No hay paradas registradas
+
+    post:
+      summary: Crear una nueva parada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parada'
+      responses:
+        '200':
+          description: Parada creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parada'
+
+    put:
+      summary: Actualizar una parada existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Parada'
+      responses:
+        '200':
+          description: Parada actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parada'
+
+  /paradas/{id}:
+    get:
+      summary: Obtener parada por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Parada encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parada'
+        '404':
+          description: Parada no encontrada
+
+    delete:
+      summary: Eliminar parada por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Parada eliminada
+        '404':
+          description: Parada no encontrada
+
+  /paradas/buscar/nombre/{nombre}:
+    get:
+      summary: Buscar paradas por nombre
+      parameters:
+        - in: path
+          name: nombre
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de paradas encontradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Parada'
+        '204':
+          description: No se encontraron paradas con ese nombre
+
+  /paradas/buscar/direccion/{direccion}:
+    get:
+      summary: Buscar paradas por dirección
+      parameters:
+        - in: path
+          name: direccion
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de paradas encontradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Parada'
+        '204':
+          description: No se encontraron paradas con esa dirección
+
+components:
+  schemas:
+    Parada:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        direccion:
+          type: string
+        latitud:
+          type: number
+          format: double
+        longitud:
+          type: number
+          format: double

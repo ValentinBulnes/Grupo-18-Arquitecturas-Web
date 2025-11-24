@@ -1,0 +1,313 @@
+openapi: 3.0.1
+info:
+  title: API Microservicio Monopatin
+  description: API para gestionar monopatines y consultas relacionadas
+  version: 1.0.0
+servers:
+  - url: http://localhost:8006
+
+paths:
+  /monopatines:
+    get:
+      summary: Obtener todos los monopatines
+      responses:
+        '200':
+          description: Lista de monopatines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MonopatinDTO'
+        '404':
+          description: No se encontraron monopatines
+
+    post:
+      summary: Crear un nuevo monopatín
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Monopatin'
+      responses:
+        '200':
+          description: Monopatín creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monopatin'
+
+  /monopatines/{id}:
+    get:
+      summary: Obtener monopatín por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Monopatín encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonopatinDTO'
+        '404':
+          description: Monopatín no encontrado
+
+    put:
+      summary: Actualizar monopatín por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Monopatin'
+      responses:
+        '200':
+          description: Monopatín actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monopatin'
+
+    delete:
+      summary: Eliminar monopatín por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Monopatín eliminado
+
+  /monopatines/parada/{paradaId}:
+    get:
+      summary: Obtener monopatines en una parada
+      parameters:
+        - in: path
+          name: paradaId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Lista de monopatines en la parada
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MonopatinDTO'
+        '204':
+          description: No se encontraron monopatines en la parada
+
+  /monopatines/estado/{estado}:
+    get:
+      summary: Obtener monopatines por estado
+      parameters:
+        - in: path
+          name: estado
+          required: true
+          schema:
+            $ref: '#/components/schemas/EstadoMonopatin'
+      responses:
+        '200':
+          description: Lista de monopatines por estado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MonopatinDTO'
+        '204':
+          description: No se encontraron monopatines en ese estado
+
+  /monopatines/uso:
+    get:
+      summary: Generar reporte de uso de monopatines
+      parameters:
+        - in: query
+          name: incluirPausas
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Reporte de uso de monopatines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReporteMonopatinDTO'
+        '204':
+          description: No se encontraron datos de uso
+
+  /monopatines/cercanos:
+    get:
+      summary: Buscar monopatines cercanos
+      parameters:
+        - in: query
+          name: latitud
+          required: true
+          schema:
+            type: number
+            format: double
+        - in: query
+          name: longitud
+          required: true
+          schema:
+            type: number
+            format: double
+        - in: query
+          name: radioKm
+          required: false
+          schema:
+            type: number
+            format: double
+            default: 5.0
+      responses:
+        '200':
+          description: Lista de monopatines cercanos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MonopatinConDistanciaDTO'
+
+components:
+  schemas:
+    Monopatin:
+      type: object
+      properties:
+        id:
+          type: string
+        estado:
+          $ref: '#/components/schemas/EstadoMonopatin'
+        kmTotales:
+          type: number
+          format: double
+        tiempoUsoTotal:
+          type: integer
+          format: int64
+        paradaActualId:
+          type: integer
+          format: int64
+        fechaAlta:
+          type: string
+          format: date-time
+        ultimoMantenimiento:
+          type: string
+          format: date-time
+        requiereMantenimiento:
+          type: boolean
+        latitud:
+          type: number
+          format: double
+        longitud:
+          type: number
+          format: double
+        kilometrajeMaximo:
+          type: number
+          format: double
+
+    MonopatinDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        estado:
+          $ref: '#/components/schemas/EstadoMonopatin'
+        kmTotales:
+          type: number
+          format: double
+        tiempoUsoTotal:
+          type: integer
+          format: int64
+        paradaActualId:
+          type: integer
+          format: int64
+        fechaAlta:
+          type: string
+          format: date-time
+        ultimoMantenimiento:
+          type: string
+          format: date-time
+        requiereMantenimiento:
+          type: boolean
+        latitud:
+          type: number
+          format: double
+        longitud:
+          type: number
+          format: double
+
+    EstadoMonopatin:
+      type: string
+      enum:
+        - DISPONIBLE
+        - EN_USO
+        - MANTENIMIENTO
+        - FUERA_DE_SERVICIO
+
+    MonopatinConDistanciaDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        estado:
+          type: string
+        latitud:
+          type: number
+          format: double
+        longitud:
+          type: number
+          format: double
+        distanciaKm:
+          type: number
+          format: double
+        paradaActualID:
+          type: integer
+          format: int64
+        requiereMantenimiento:
+          type: boolean
+
+    ReporteMonopatinDTO:
+      type: object
+      properties:
+        monopatinId:
+          type: string
+        kilometrosTotales:
+          type: number
+          format: double
+        tiempoTotalPausasSeg:
+          type: integer
+          format: int64
+        requiereMantenimiento:
+          type: boolean
+
+    ViajeDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        kilometrosRecorridos:
+          type: number
+          format: double
+        totalSegundosPausa:
+          type: integer
+          format: int64

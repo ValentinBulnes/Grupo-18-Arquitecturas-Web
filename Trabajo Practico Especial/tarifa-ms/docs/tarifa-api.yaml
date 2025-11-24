@@ -1,0 +1,155 @@
+openapi: 3.0.1
+info:
+  title: API Microservicio Tarifa
+  description: API para gestionar tarifas de monopatines
+  version: 1.0.0
+servers:
+  - url: http://localhost:8004
+
+paths:
+  /tarifas:
+    post:
+      summary: Crear una nueva tarifa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tarifa'
+      responses:
+        '200':
+          description: Tarifa creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tarifa'
+
+    get:
+      summary: Listar todas las tarifas
+      responses:
+        '200':
+          description: Lista de tarifas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tarifa'
+
+  /tarifas/{id}:
+    get:
+      summary: Obtener tarifa por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Tarifa encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tarifa'
+        '404':
+          description: Tarifa no encontrada
+
+    put:
+      summary: Actualizar tarifa por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tarifa'
+      responses:
+        '200':
+          description: Tarifa actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tarifa'
+        '404':
+          description: Tarifa no encontrada
+
+    delete:
+      summary: Eliminar tarifa por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Tarifa eliminada
+        '404':
+          description: Tarifa no encontrada
+
+  /tarifas/actual:
+    get:
+      summary: Obtener la tarifa actual (más reciente)
+      responses:
+        '200':
+          description: Tarifa actual
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tarifa'
+
+  /tarifas/vigente:
+    get:
+      summary: Obtener la tarifa vigente (DTO simplificado)
+      responses:
+        '200':
+          description: Tarifa vigente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TarifaDTO'
+        '404':
+          description: Tarifa vigente no encontrada
+
+components:
+  schemas:
+    Tarifa:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        precioPorKm:
+          type: number
+          format: double
+        precioPorMinuto:
+          type: number
+          format: double
+        tarifaExtraPorPausa:
+          type: number
+          format: double
+        fechaInicioVigencia:
+          type: string
+          format: date
+
+    TarifaDTO:
+      type: object
+      properties:
+        precioPorKm:
+          type: number
+          format: double
+        precioPorMinuto:
+          type: number
+          format: double
+        tarifaExtraPorPausa:
+          type: number
+          format: double

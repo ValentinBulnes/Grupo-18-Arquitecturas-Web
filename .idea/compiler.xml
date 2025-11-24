@@ -10,13 +10,14 @@
         <module name="gateway" />
         <module name="parada-ms" />
       </profile>
-      <profile name="Annotation profile for monopatin-ms" enabled="true">
+      <profile name="Annotation profile for usuario-ms" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
+        <module name="usuario-ms" />
         <module name="monopatin-ms" />
       </profile>
       <profile name="Annotation profile for viaje-ms" enabled="true">
@@ -27,9 +28,8 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
         </processorPath>
         <module name="viaje-ms" />
-        <module name="cuenta-ms" />
         <module name="factura-ms" />
-        <module name="usuario-ms" />
+        <module name="cuenta-ms" />
         <module name="tarifa-ms" />
       </profile>
     </annotationProcessing>

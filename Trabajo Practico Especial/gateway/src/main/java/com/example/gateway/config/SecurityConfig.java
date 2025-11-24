@@ -2,30 +2,24 @@ package com.example.gateway.config;
 
 import com.example.gateway.security.AuthorityConstant;
 import com.example.gateway.security.jwt.JwtFilter;
-import com.example.gateway.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
+@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 public class SecurityConfig {
-    private final TokenProvider tokenProvider;
-
-    public SecurityConfig(TokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -33,36 +27,46 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .securityMatcher("/api/**")
-         .authorizeHttpRequests(authz -> authz
-                // Endpoints públicos
-                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
-
-                // Endpoints de ADMINISTRADOR
-                .requestMatchers(HttpMethod.GET, "/api/monopatines/uso").hasAuthority(AuthorityConstant._ADMIN)
-               // .requestMatchers(HttpMethod.PUT, "/api/usuarios/*/anular").hasAuthority(AuthorityConstant._ADMIN)
-                //.requestMatchers(HttpMethod.PATCH, "/api/usuarios/*/anular").hasAuthority(AuthorityConstant._ADMIN)
-                .requestMatchers(HttpMethod.GET, "/api/viajes/monopatines/mas-viajes").hasAuthority(AuthorityConstant._ADMIN)
-                .requestMatchers(HttpMethod.GET, "/api/facturas/total").hasAuthority(AuthorityConstant._ADMIN)
-                .requestMatchers(HttpMethod.GET, "/api/usuarios/uso-frecuente").hasAuthority(AuthorityConstant._ADMIN)
-                .requestMatchers(HttpMethod.POST, "/api/tarifas/vigente").hasAuthority(AuthorityConstant._ADMIN)
+    public ReactiveAuthenticationManager authenticationManager(
+            ReactiveUserDetailsService userDetailsService,
+            PasswordEncoder encoder
+    ) {
+        UserDetailsRepositoryReactiveAuthenticationManager authManager =
+                new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
+        authManager.setPasswordEncoder(encoder);
+        return authManager;
+    }
 
 
-                // Endpoints de USUARIO
-                .requestMatchers(HttpMethod.GET, "/api/monopatines/cercanos").hasAuthority(AuthorityConstant._USER)
-                .requestMatchers(HttpMethod.GET, "/api/viajes/uso-por-cuenta").hasAuthority(AuthorityConstant._USER)
-                .requestMatchers(HttpMethod.GET, "/api/viajes/mis-viajes").hasAuthority(AuthorityConstant._USER)
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, JwtFilter jwtFilter) {
 
+        return http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(exchange -> exchange
 
-                // Cualquier otra request requiere autenticación
-                .anyRequest().authenticated()
-        )
-                .httpBasic(Customizer.withDefaults())
-                .addFilterBefore(new JwtFilter(this.tokenProvider), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+                        // PUBLIC
+                        .pathMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/auth/register").permitAll()
+
+                        // ADMIN
+                        .pathMatchers(HttpMethod.GET, "/monopatines/uso").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.GET, "/viajes/monopatines/mas-viajes").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.GET, "/facturas/total").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.GET, "/usuarios/uso-frecuente").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.POST, "/tarifas/vigente").hasAuthority(AuthorityConstant._ADMIN)
+
+                        // USER
+                        .pathMatchers(HttpMethod.GET, "/monopatines/cercanos").hasAuthority(AuthorityConstant._USER)
+                        .pathMatchers(HttpMethod.GET, "/viajes/uso-por-cuenta").hasAuthority(AuthorityConstant._USER)
+                        .pathMatchers(HttpMethod.GET, "/viajes/mis-viajes").hasAuthority(AuthorityConstant._USER)
+
+                        // ANY OTHER REQUEST → AUTH REQUIRED
+                        .anyExchange().authenticated()
+                )
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+
+                .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .build();
     }
 }

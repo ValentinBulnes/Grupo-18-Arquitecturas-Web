@@ -11,8 +11,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("""
-        FROM User u JOIN FETCH u.authorities
-        WHERE lower(u.username) =  ?1
+        SELECT u FROM User u
+        LEFT JOIN FETCH u.authorities
+        WHERE LOWER(u.username) = ?1
     """)
     Optional<User> findOneWithAuthoritiesByUsernameIgnoreCase(String username );
 }

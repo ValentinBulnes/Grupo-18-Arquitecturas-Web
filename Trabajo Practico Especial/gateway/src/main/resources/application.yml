@@ -1,4 +1,4 @@
-=server:
+server:
   port: 8080   # Puerto del Gateway
 
 spring:
@@ -25,7 +25,8 @@ spring:
         - id: usuario-ms
           uri: http://localhost:8001
           predicates:
-            - Path=/usuarios/**, /cuentas/**
+            - Path=/usuarios/**
+            - Path=/cuentas/**
 
         # --- Monopatin MS ---
         - id: monopatin-ms

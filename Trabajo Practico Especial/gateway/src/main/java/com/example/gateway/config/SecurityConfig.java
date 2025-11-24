@@ -45,27 +45,56 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchange -> exchange
 
-                        // PUBLIC
-                        .pathMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .pathMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        // 1. PÚBLICO (Auth)
+                        .pathMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
 
-                        // ADMIN
-                        .pathMatchers(HttpMethod.GET, "/monopatines/uso").hasAuthority(AuthorityConstant._ADMIN)
-                        .pathMatchers(HttpMethod.GET, "/viajes/monopatines/mas-viajes").hasAuthority(AuthorityConstant._ADMIN)
-                        .pathMatchers(HttpMethod.GET, "/facturas/total").hasAuthority(AuthorityConstant._ADMIN)
-                        .pathMatchers(HttpMethod.GET, "/usuarios/uso-frecuente").hasAuthority(AuthorityConstant._ADMIN)
-                        .pathMatchers(HttpMethod.POST, "/tarifas/vigente").hasAuthority(AuthorityConstant._ADMIN)
+                        // 2. EXCLUSIVO ADMIN (Gestión de Negocio e Infraestructura)
+                        // Reportes
+                        .pathMatchers("/monopatines/uso",
+                                "/viajes/monopatines/mas-viajes",
+                                "/facturas/total",
+                                "/usuarios/uso-frecuente").hasAuthority(AuthorityConstant._ADMIN)
 
-                        // USER
+                        // Gestión de Tarifas (Crear y Modificar)
+                        .pathMatchers(HttpMethod.POST, "/tarifas").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.PUT, "/tarifas/**").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.DELETE, "/tarifas/**").hasAuthority(AuthorityConstant._ADMIN)
+
+                        // Gestión de Paradas (Solo Admin construye paradas)
+                        .pathMatchers(HttpMethod.POST, "/paradas").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.PUT, "/paradas/**").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.DELETE, "/paradas/**").hasAuthority(AuthorityConstant._ADMIN)
+
+                        // Gestión de Monopatines (Alta y Baja de flota)
+                        .pathMatchers(HttpMethod.POST, "/monopatines").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.PUT, "/monopatines/**").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.DELETE, "/monopatines/**").hasAuthority(AuthorityConstant._ADMIN)
+
+                        // Gestión de Cuentas (Admin puede inhabilitar usuarios)
+                        .pathMatchers(HttpMethod.PUT, "/cuentas/*/inhabilitar").hasAuthority(AuthorityConstant._ADMIN)
+                        .pathMatchers(HttpMethod.PUT, "/cuentas/*/habilitar").hasAuthority(AuthorityConstant._ADMIN)
+
+
+                        // 3. EXCLUSIVO USER (Uso del Servicio)
+                        // Viajar
+                        .pathMatchers(HttpMethod.POST, "/viajes").hasAuthority(AuthorityConstant._USER)
+                        .pathMatchers(HttpMethod.PUT, "/viajes/**").hasAuthority(AuthorityConstant._USER)
+                        // Consultar flota cercana para viajar
                         .pathMatchers(HttpMethod.GET, "/monopatines/cercanos").hasAuthority(AuthorityConstant._USER)
+                        // Consultar sus propios consumos
                         .pathMatchers(HttpMethod.GET, "/viajes/uso-por-cuenta").hasAuthority(AuthorityConstant._USER)
-                        .pathMatchers(HttpMethod.GET, "/viajes/mis-viajes").hasAuthority(AuthorityConstant._USER)
 
-                        // ANY OTHER REQUEST → AUTH REQUIRED
+
+                        // 4. COMPARTIDOS (Autenticados)
+                        // Ver paradas, ver tarifas vigentes, ver monopatines (lectura)
+                        .pathMatchers(HttpMethod.GET, "/paradas/**").authenticated()
+                        .pathMatchers(HttpMethod.GET, "/tarifas/**").authenticated()
+                        .pathMatchers(HttpMethod.GET, "/monopatines/**").authenticated()
+
+                        // Cualquier otra cosa requiere estar logueado (por seguridad)
                         .anyExchange().authenticated()
                 )
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
-
                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }

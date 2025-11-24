@@ -25,8 +25,7 @@ spring:
         - id: usuario-ms
           uri: http://localhost:8001
           predicates:
-            - Path=/usuarios/**
-            - Path=/cuentas/**
+            - Path=/usuarios/**, /cuentas/**
 
         # --- Monopatin MS ---
         - id: monopatin-ms

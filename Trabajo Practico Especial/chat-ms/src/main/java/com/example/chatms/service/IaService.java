@@ -55,7 +55,7 @@ public class IaService {
     // ========================================================================
 
     public IaService() {
-        this.CONTEXTO_SQL = cargarEsquemaSQL("esquema_completo.sql");
+        this.CONTEXTO_SQL = cargarEsquemaSQL("dump.sql");
     }
 
     private String cargarEsquemaSQL(String nombreArchivo) {

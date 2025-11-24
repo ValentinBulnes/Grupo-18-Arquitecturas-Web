@@ -19,7 +19,7 @@
         </processorPath>
         <module name="monopatin-ms" />
       </profile>
-      <profile name="Annotation profile for viaje-ms" enabled="true">
+      <profile name="Annotation profile for chatms" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -32,6 +32,15 @@
         <module name="usuario-ms" />
         <module name="tarifa-ms" />
       </profile>
+      <profile name="Annotation profile for chat-ms" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="chat-ms" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="administracion-ms" target="21" />
@@ -43,6 +52,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="TP3" options="-parameters" />
       <module name="administracion-ms" options="-parameters" />
+      <module name="chat-ms" options="-parameters" />
       <module name="cuenta-ms" options="-parameters" />
       <module name="factura-ms" options="-parameters" />
       <module name="gateway" options="-parameters" />

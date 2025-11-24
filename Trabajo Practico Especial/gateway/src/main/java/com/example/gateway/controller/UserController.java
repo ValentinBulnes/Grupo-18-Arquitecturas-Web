@@ -1,5 +1,7 @@
 package com.example.gateway.controller;
 
+import com.example.gateway.DTO.UserDTO;
+import com.example.gateway.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

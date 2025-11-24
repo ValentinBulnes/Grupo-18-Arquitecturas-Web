@@ -119,6 +119,26 @@ services:
       timeout: 5s
       retries: 5
 
+  auth-db:
+    image: mysql:8.3.0
+    container_name: auth-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: auth
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3308:3306"
+    networks:
+      - app-network
+    volumes:
+      - auth_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "user", "-puser" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   app-network:
     driver: bridge
@@ -131,3 +151,4 @@ volumes:
   viaje_data:
   tarifa_data:
   factura_data:
+  auth_data:

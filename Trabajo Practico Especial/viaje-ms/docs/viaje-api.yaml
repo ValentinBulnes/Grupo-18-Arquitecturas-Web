@@ -1,0 +1,242 @@
+openapi: 3.0.1
+info:
+  title: API Microservicio Viaje
+  description: API para gestionar viajes de monopatines y consultas relacionadas
+  version: 1.0.0
+servers:
+  - url: http://localhost:8007
+paths:
+  /viajes/{id}:
+    get:
+      summary: Obtener viaje por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Viaje encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viaje'
+        '404':
+          description: Viaje no encontrado
+    put:
+      summary: Actualizar un viaje existente
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Viaje'
+      responses:
+        '200':
+          description: Viaje actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viaje'
+        '404':
+          description: Viaje no encontrado
+
+  /viajes:
+    get:
+      summary: Listar viajes
+      parameters:
+        - in: query
+          name: userId
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: monopatinId
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de viajes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Viaje'
+
+    post:
+      summary: Crear un nuevo viaje
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Viaje'
+      responses:
+        '201':
+          description: Viaje creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Viaje'
+
+  /viajes/monopatines/mas-viajes:
+    get:
+      summary: Obtener monopatines con más viajes en un año
+      parameters:
+        - in: query
+          name: anio
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: cantidadMinima
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de monopatines con más viajes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ViajesPorMonopatinDTO'
+
+  /viajes/uso-por-cuenta:
+    get:
+      summary: Obtener uso de viajes por cuenta
+      parameters:
+        - in: query
+          name: cuentaId
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: usuarioId
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: fechaDesde
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: fechaHasta
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: incluirUsuariosRelacionados
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Resumen de uso por cuenta
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Error en formato de fechas
+        '404':
+          description: No se encontró información
+
+  /viajes/por-periodo:
+    get:
+      summary: Obtener viajes por periodo
+      parameters:
+        - in: query
+          name: fechaDesde
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: fechaHasta
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Lista de viajes en el periodo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ViajeDTO'
+        '400':
+          description: Error en formato de fechas
+
+components:
+  schemas:
+    Viaje:
+      type: object
+      properties:
+        id:
+          type: string
+        usuarioId:
+          type: integer
+        monopatinId:
+          type: string
+        paradaOrigenId:
+          type: integer
+          format: int64
+        paradaDestinoId:
+          type: integer
+          format: int64
+        fechaInicio:
+          type: string
+          format: date-time
+        fechaFin:
+          type: string
+          format: date-time
+        kilometrosRecorridos:
+          type: number
+          format: double
+        pausaInicio:
+          type: string
+          format: date-time
+        totalSegundosPausa:
+          type: integer
+          format: int64
+
+    ViajeDTO:
+      type: object
+      properties:
+        usuarioId:
+          type: integer
+          format: int64
+        fechaInicio:
+          type: string
+          format: date-time
+        fechaFin:
+          type: string
+          format: date-time
+
+    ViajesPorMonopatinDTO:
+      type: object
+      properties:
+        idMonopatin:
+          type: string
+        totalViajes:
+          type: integer

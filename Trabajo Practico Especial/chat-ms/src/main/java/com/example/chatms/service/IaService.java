@@ -181,9 +181,7 @@ public class IaService {
         }
     }
 
-    /**
-     * Ejecuta una consulta SELECT en la base de datos especificada
-     */
+    
     private List<Map<String, Object>> ejecutarSelect(String database, String sql) {
         JdbcTemplate jdbcTemplate = dataSourceManager.getJdbcTemplate(database);
 
@@ -205,10 +203,6 @@ public class IaService {
         return resultados;
     }
 
-    /**
-     * Método transaccional separado para ejecutar operaciones DML
-     * (INSERT/UPDATE/DELETE)
-     */
     @Transactional
     private int ejecutarDML(String database, String sql) {
         JdbcTemplate jdbcTemplate = dataSourceManager.getJdbcTemplate(database);

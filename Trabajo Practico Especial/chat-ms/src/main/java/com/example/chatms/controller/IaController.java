@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/ia")
+@RequestMapping("/chat")
 public class IaController {    // IaController exponene el endpoint REST que recibe prompts y delega a IaService.
 
 

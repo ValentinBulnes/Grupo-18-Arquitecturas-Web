@@ -15,7 +15,7 @@ public class MonopatinDTO {
     private EstadoMonopatin estado;
     private Double kmTotales;
     private Long tiempoUsoTotal;
-    private long paradaActualId;
+    private Long paradaActualId;
     private LocalDateTime fechaAlta;
     private LocalDateTime ultimoMantenimiento;
     private Boolean requiereMantenimiento;

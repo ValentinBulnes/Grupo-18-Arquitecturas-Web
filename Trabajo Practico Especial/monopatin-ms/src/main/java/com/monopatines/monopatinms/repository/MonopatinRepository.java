@@ -15,7 +15,7 @@ public interface MonopatinRepository extends MongoRepository<Monopatin, String> 
     List<Monopatin> findByEstado(EstadoMonopatin estado);
 
     // Buscar por parada actual
-    List<Monopatin> findByParadaActualID(long paradaActualID);
+    List<Monopatin> findByParadaActualId(long paradaActualId);
 
     // Buscar por mantenimiento requerido
     List<Monopatin> findByRequiereMantenimiento(boolean requiere);

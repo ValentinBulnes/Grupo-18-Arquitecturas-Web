@@ -52,7 +52,7 @@ public class MonopatinService {
     // insertar monopatin
     public Monopatin saveMonopatin(Monopatin monopatin) {
         Monopatin m;
-        validarParada(monopatin.getParadaActualID());
+        validarParada(monopatin.getParadaActualId());
         m=  monopatinRepository.save(monopatin);
         return m;
     }
@@ -60,15 +60,15 @@ public class MonopatinService {
     // update monopatin
     public Monopatin updateMonopatin(Monopatin monopatin) {
         Monopatin m;
-        validarParada(monopatin.getParadaActualID());
+        validarParada(monopatin.getParadaActualId());
         m= monopatinRepository.save(monopatin);
         return m;
     }
     // encontrar monopatines en determinada parada
-    public List<MonopatinDTO> findByParada(long idParada) {
+    public List<MonopatinDTO> findByParada(Long idParada) {
         ParadaDTO parada = paradaFeignClient.findById(idParada);
         if (parada != null) {
-            return monopatinRepository.findByParadaActualID(idParada).stream()
+            return monopatinRepository.findByParadaActualId(idParada).stream()
                     .map(this::convertirADTO)
                     .collect(Collectors.toList());
         }
@@ -150,7 +150,7 @@ public class MonopatinService {
                             monopatin.getLatitud(),
                             monopatin.getLongitud(),
                             distancia,
-                            monopatin.getParadaActualID(),
+                            monopatin.getParadaActualId(),
                             monopatin.isRequiereMantenimiento()
                     );
                     resultado.add(dto);
@@ -172,6 +172,7 @@ public class MonopatinService {
         dto.setEstado(monopatin.getEstado());
         dto.setKmTotales(monopatin.getKmTotales());
         dto.setTiempoUsoTotal(monopatin.getTiempoUsoTotal());
+        dto.setParadaActualId(monopatin.getParadaActualId());
         dto.setLongitud(monopatin.getLongitud());
         dto.setLatitud(monopatin.getLatitud());
         dto.setFechaAlta(monopatin.getFechaAlta());

@@ -1,80 +1,98 @@
--- Elimina la tabla si existe para evitar errores al crearla de nuevo
-DROP TABLE IF EXISTS factura;
-
 -- Tabla de facturación general
+DROP TABLE IF EXISTS factura;
 CREATE TABLE factura (
-    id BIGINT NOT NULL AUTO_INCREMENT,      -- Identificador único de la factura
-    fecha_emision DATE NOT NULL,            -- Fecha en que se emitió la factura
-    monto_total DOUBLE NOT NULL,            -- Monto total calculado del viaje
-    descripcion VARCHAR(255),               -- Texto opcional con notas adicionales
-    viaje_id VARCHAR(255),                  -- ID del viaje en MongoDB (por eso es String)
-    cuenta_id BIGINT NOT NULL,              -- Relación con la cuenta del usuario (MySQL)
-    usuario_id BIGINT NOT NULL,             -- Relación con el usuario (MySQL)
+    id BIGINT NOT NULL AUTO_INCREMENT,     
+    fecha_emision DATE NOT NULL,           
+    monto_total DOUBLE NOT NULL,           
+    descripcion VARCHAR(255),              
+    viaje_id VARCHAR(255),                 
+    cuenta_id BIGINT NOT NULL,             
+    usuario_id BIGINT NOT NULL,            
     PRIMARY KEY (id)
 );
 
+INSERT INTO factura (fecha_emision, monto_total, descripcion, viaje_id, cuenta_id, usuario_id)
+VALUES
+('2024-03-01', 1500, 'Viaje urbano', '670abf9123afbc12de447901', 1, 1),
+('2024-03-03', 1800, 'Viaje con pausa', '670abfa5123afbc12de447905', 2, 3);
 
 -- Tabla de paradas estándar
 DROP TABLE IF EXISTS parada;
 
 CREATE TABLE parada (
-    id BIGINT NOT NULL AUTO_INCREMENT,      -- Identificador único
-    nombre VARCHAR(255),                    -- Nombre de la parada
-    direccion VARCHAR(255),                 -- Dirección física
-    latitud DOUBLE,                         -- Ubicación geográfica
-    longitud DOUBLE,                        -- Ubicación geográfica
+    id BIGINT NOT NULL AUTO_INCREMENT,     
+    nombre VARCHAR(255),                   
+    direccion VARCHAR(255),                
+    latitud DOUBLE,                        
+    longitud DOUBLE,                       
     PRIMARY KEY (id)
 );
 
+INSERT INTO parada (nombre, direccion, latitud, longitud)
+VALUES
+('Parada Central', 'Av. Siempre Viva 123', -34.603, -58.381),
+('Parada Norte',   'Calle 9 de Julio 456', -34.610, -58.400),
+('Parada Sur',     'San Martín 789',       -34.620, -58.360);
 
 -- Tabla con las tarifas vigentes del sistema
 DROP TABLE IF EXISTS tarifa;
 
 CREATE TABLE tarifa (
-    id BIGINT NOT NULL AUTO_INCREMENT,      -- ID de la tarifa
-    precio_por_km DOUBLE NOT NULL,          -- Costo por kilómetro
-    precio_por_minuto DOUBLE NOT NULL,      -- Costo por minuto
-    tarifa_extra_por_pausa DOUBLE NOT NULL, -- Costo extra por pausa
-    fecha_inicio_vigencia DATE,             -- Fecha desde que aplica esta tarifa
+    id BIGINT NOT NULL AUTO_INCREMENT,     
+    precio_por_km DOUBLE NOT NULL,         
+    precio_por_minuto DOUBLE NOT NULL,     
+    tarifa_extra_por_pausa DOUBLE NOT NULL,
+    fecha_inicio_vigencia DATE,            
     PRIMARY KEY (id)
 );
 
+INSERT INTO tarifa (precio_por_km, precio_por_minuto, tarifa_extra_por_pausa, fecha_inicio_vigencia)
+VALUES (50, 10, 5, '2024-01-01');
 
 -- Tabla principal de usuarios
 DROP TABLE IF EXISTS usuario;
 
 CREATE TABLE usuario (
-    id BIGINT NOT NULL AUTO_INCREMENT,      -- ID único
-    nombre VARCHAR(255),                    -- Nombre del usuario
-    apellido VARCHAR(255),                  -- Apellido
-    email VARCHAR(255),                     -- Correo
-    telefono VARCHAR(255),                  -- Teléfono
-    latitud DOUBLE,                         -- Ubicación actual
-    longitud DOUBLE,                        -- Ubicación actual
+    id BIGINT NOT NULL AUTO_INCREMENT,    
+    nombre VARCHAR(255),                  
+    apellido VARCHAR(255),                
+    email VARCHAR(255),                   
+    telefono VARCHAR(255),                
+    latitud DOUBLE,                       
+    longitud DOUBLE,                      
     PRIMARY KEY (id)
 );
 
+INSERT INTO usuario (nombre, apellido, email, telefono, latitud, longitud)
+VALUES 
+('Ana', 'Martínez', 'ana@mail.com', '111-222-3333', -34.6037, -58.3816),
+('Luis', 'Pérez', 'luis@mail.com', '222-333-4444', -34.6100, -58.3900),
+('Carla', 'Gómez', 'carla@mail.com', '333-444-5555', -34.6200, -58.3700);
 
 -- Tabla de cuentas monetarias
 DROP TABLE IF EXISTS cuenta;
 
 CREATE TABLE cuenta (
-    numero_identificatorio BIGINT NOT NULL AUTO_INCREMENT, -- ID único de cuenta
-    tipo VARCHAR(255),                     -- Tipo (ej: prepaga, crédito, débito)
-    saldo DOUBLE,                          -- Saldo disponible
-    mercado_pago_id VARCHAR(255),          -- ID de MP vinculado
-    fecha_alta DATE,                       -- Fecha de creación
-    activa BOOLEAN DEFAULT TRUE,           -- Estado de la cuenta
+    numero_identificatorio BIGINT NOT NULL AUTO_INCREMENT, 
+    tipo VARCHAR(255),                    
+    saldo DOUBLE,                         
+    mercado_pago_id VARCHAR(255),         
+    fecha_alta DATE,                      
+    activa BOOLEAN DEFAULT TRUE,          
     PRIMARY KEY (numero_identificatorio)
 );
 
+INSERT INTO cuenta (tipo, saldo, mercado_pago_id, fecha_alta, activa)
+VALUES
+('BASICA', 5000, 'MPA123', '2024-01-15', TRUE),
+('PREMIUM', 20000, 'MPA456', '2024-02-10', TRUE);
 
 -- Tabla puente para relación muchos-a-muchos entre cuentas y usuarios
 DROP TABLE IF EXISTS cuenta_usuario;
 
 CREATE TABLE cuenta_usuario (
-    cuenta_id BIGINT NOT NULL,             -- FK a cuenta
-    usuario_id BIGINT NOT NULL,            -- FK a usuario
+    cuenta_id BIGINT NOT NULL,           
+    usuario_id BIGINT NOT NULL,          
     PRIMARY KEY (cuenta_id, usuario_id),
 
     -- Relaciones con eliminación en cascada
@@ -87,7 +105,13 @@ CREATE TABLE cuenta_usuario (
         ON DELETE CASCADE
 );
 
+INSERT INTO cuenta_usuario (cuenta_id, usuario_id)
+VALUES
+(1, 1),
+(1, 2),
+(2, 3);
 
+-- Dumping db: db_monopatines
 db_monopatines: schema
     + collections
         monopatines: collection
@@ -106,6 +130,7 @@ db_monopatines: schema
                 kilometrajeMaximo: Double      
 
 
+-- Dumping db: db_viajes
 db_viajes: schema
     + collections
         viajes: collection

@@ -52,7 +52,7 @@ public class IaService {
     // Bloqueamos DDL u otras operaciones peligrosas por si el modelo "derrapa".
     private static final Pattern SQL_FORBIDDEN =
             Pattern.compile("(?i)\\b(DROP|TRUNCATE|ALTER|CREATE|GRANT|REVOKE)\\b");
-    // ========================================================================
+    // =========================================================================
 
     public IaService() {
         this.CONTEXTO_SQL = cargarEsquemaSQL("dump.sql");

@@ -20,10 +20,12 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"var respuesta = pm.response.json();\r",
-											"pm.collectionVariables.set(\"cuentaId\", respuesta.id);\r",
+											"var jsonData = pm.response.json();\r",
 											"\r",
-											"console.log(\"cuentaId guardado:\", respuesta.id);"
+											"if (jsonData.id) {\r",
+											"    pm.collectionVariables.set(\"cuentaId\", jsonData.id);\r",
+											"    console.log(\"✅ Cuenta creada con ID: \" + jsonData.id);\r",
+											"}"
 										],
 										"type": "text/javascript",
 										"packages": {},
@@ -36,7 +38,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"tipo\": \"PREMIUM\",\r\n    \"saldo\": 500.0,\r\n    \"mercadoPagoId\": \"mp-12345\",\r\n    \"fechaAlta\": \"2025-11-10\",\r\n    \"activa\": true,\r\n    \"usuarios\": [\r\n        {\r\n            \"id\": {{usuarioId}} \r\n        }\r\n    ]\r\n}",
+									"raw": "{\r\n    \"tipo\": \"PREMIUM\",\r\n    \"saldo\": 5000.0,\r\n    \"fechaAlta\": \"2025-11-24\",\r\n    \"activa\": true,\r\n    \"usuarios\": [\r\n        {\r\n            \"id\": {{usuarioId}}\r\n        }\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -326,6 +328,31 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Pagar (Mock MP)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/{{usuarioId}}/pagar?monto=500",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								"{{usuarioId}}",
+								"pagar"
+							],
+							"query": [
+								{
+									"key": "monto",
+									"value": "500"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -544,7 +571,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"estado\": \"DISPONIBLE\",\r\n    \"kmTotales\": 0.0,\r\n    \"tiempoUsoTotal\": 0,\r\n    \"paradaActualID\": {{paradaId}},\r\n    \"fechaAlta\": \"2025-11-10T10:00:00\",\r\n    \"ultimoMantenimiento\": \"2025-11-10T10:00:00\",\r\n    \"requiereMantenimiento\": false,\r\n    \"latitud\": -37.328,\r\n    \"longitud\": -59.139,\r\n    \"kilometrajeMaximo\": 1000.0\r\n}",
+							"raw": "{\r\n    \"estado\": \"DISPONIBLE\",\r\n    \"kmTotales\": 0.0,\r\n    \"tiempoUsoTotal\": 0,\r\n    \"paradaActualId\": {{paradaId}},\r\n    \"fechaAlta\": \"2025-11-10T10:00:00\",\r\n    \"ultimoMantenimiento\": \"2025-11-10T10:00:00\",\r\n    \"requiereMantenimiento\": false,\r\n    \"latitud\": -37.328,\r\n    \"longitud\": -59.139,\r\n    \"kilometrajeMaximo\": 1000.0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -680,7 +707,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/monopatines/cercanos?latitud=-37.328&longitud=-59.139&radioKm=1.0",
+							"raw": "{{baseUrl}}/monopatines/cercanos?lat=-37.32&lon=-59.13",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -690,16 +717,12 @@
 							],
 							"query": [
 								{
-									"key": "latitud",
-									"value": "-37.328"
+									"key": "lat",
+									"value": "-37.32"
 								},
 								{
-									"key": "longitud",
-									"value": "-59.139"
-								},
-								{
-									"key": "radioKm",
-									"value": "1.0"
+									"key": "lon",
+									"value": "-59.13"
 								}
 							]
 						}
@@ -713,7 +736,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"estado\": \"MANTENIMIENTO\",\r\n    \"paradaActualID\": {{paradaId}},\r\n    \"latitud\": -37.328,\r\n    \"longitud\": -59.139,\r\n    \"requiereMantenimiento\": true,\r\n    \"kilometrajeMaximo\": 1000.0\r\n}",
+							"raw": "{\r\n    \"estado\": \"MANTENIMIENTO\",\r\n    \"paradaActualId\": {{paradaId}},  \r\n    \"latitud\": -37.328,\r\n    \"longitud\": -59.139,\r\n    \"requiereMantenimiento\": true,\r\n    \"kilometrajeMaximo\": 1000.0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1248,8 +1271,151 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "POST Registro (crear Admin/Usuario)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"userP\",\r\n  \"password\": \"user123\",\r\n  \"authorities\": [\"USER\", \"PREMIUM\"]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token\", json.id_token);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"userP\",\r\n  \"password\": \"user123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "POST consulta con ia",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "¿Cuál es el precio actual por kilómetro y cuánto cuesta el minuto de uso?",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/chat/prompt",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chat",
+						"prompt"
+					]
+				}
+			},
+			"response": []
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -1305,6 +1471,10 @@
 		},
 		{
 			"key": "paradaId_Destino",
+			"value": ""
+		},
+		{
+			"key": "token",
 			"value": ""
 		}
 	]

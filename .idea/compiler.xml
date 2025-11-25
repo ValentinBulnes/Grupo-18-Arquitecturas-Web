@@ -8,7 +8,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gateway" />
+        <module name="mapas-ms" />
         <module name="parada-ms" />
+      </profile>
+      <profile name="Annotation profile for chatms" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="chat-ms" />
       </profile>
       <profile name="Annotation profile for usuario-ms" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -20,7 +30,7 @@
         <module name="usuario-ms" />
         <module name="monopatin-ms" />
       </profile>
-      <profile name="Annotation profile for chatms" enabled="true">
+      <profile name="Annotation profile for viaje-ms" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -32,14 +42,14 @@
         <module name="cuenta-ms" />
         <module name="tarifa-ms" />
       </profile>
-      <profile name="Annotation profile for chat-ms" enabled="true">
+      <profile name="Annotation profile for mercadopago-ms" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
-        <module name="chat-ms" />
+        <module name="mercadopago-ms" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -56,6 +66,8 @@
       <module name="cuenta-ms" options="-parameters" />
       <module name="factura-ms" options="-parameters" />
       <module name="gateway" options="-parameters" />
+      <module name="mapas-ms" options="-parameters" />
+      <module name="mercadopago-ms" options="-parameters" />
       <module name="monopatin-ms" options="-parameters" />
       <module name="parada-ms" options="-parameters" />
       <module name="tarifa-ms" options="-parameters" />

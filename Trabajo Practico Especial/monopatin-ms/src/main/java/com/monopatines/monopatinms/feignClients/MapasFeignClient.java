@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "mapasClient", url = "http://mapas-ms:8090")
+@FeignClient(name = "mapasClient", url = "http://localhost:8090")
 public interface MapasFeignClient{
     @GetMapping("/mapas/monopatines-cercanos")
     List<MonopatinDTO> buscarCercanos(@RequestParam("lat") double lat, @RequestParam("lon") double lon);

@@ -92,6 +92,7 @@ public class MonopatinController {
     }
 
     // Encontrar monopatines cercanos usando query params (alternativa más simple)
+    /*
     @GetMapping("/cercanos")
     public ResponseEntity<List<MonopatinConDistanciaDTO>> buscarCercanosQuery(
             @RequestParam Double latitud,
@@ -101,6 +102,8 @@ public class MonopatinController {
                 latitud, longitud, radioKm);
         return ResponseEntity.ok(resultado);
     }
+     */
+
     @GetMapping("/cercanos")
     public ResponseEntity<List<MonopatinDTO>> obtenerCercanos(@RequestParam double lat, @RequestParam double lon) {
         List<MonopatinDTO> resultado = monopatinService.obtenerMonopatinesCercanos(lat, lon);

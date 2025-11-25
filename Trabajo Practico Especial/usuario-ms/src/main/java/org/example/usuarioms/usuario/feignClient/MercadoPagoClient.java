@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "mercadoPagoClient", url = "http://mercadopago-ms:8089")
+@FeignClient(name = "mercadoPagoClient", url = "http://localhost:8089")
 public interface MercadoPagoClient {
     @GetMapping("/mercadopago/saldo/{cuentaId}")
     Double obtenerSaldo(@PathVariable("cuentaId") Long cuentaId);
